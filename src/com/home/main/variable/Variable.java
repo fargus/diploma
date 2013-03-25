@@ -1,28 +1,29 @@
 package com.home.main.variable;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
+import com.home.main.db.entities.FuzzySetDO;
+import com.home.main.db.entities.ModificatorDO;
+import com.home.main.db.entities.VariableDO;
 import com.home.main.fuzzyset.FuzzySet;
 
 public class Variable {
 
-	private int id;
+	private Integer id;
 
 	private String name;
-	private Map<Integer, FuzzySet> terms;
+	private Set<FuzzySet> terms;
 	private Set<Modificator> modyficators;
 	private double min;
 	private double max;
 
-	public Variable(int id, String name, double min, double max) {
+	public Variable(Integer id, String name, double min, double max) {
 		this(id, name, null, min, max, null);
 		setModyficator(new HashSet<Modificator>());
-		setTerms(new HashMap<Integer, FuzzySet>());
+		setTerms(new HashSet<FuzzySet>());
 	}
-	public Variable(int id, String name, Map<Integer, FuzzySet> terms, double min, double max,
+	public Variable(Integer id, String name, Set<FuzzySet> terms, double min, double max,
 			Set<Modificator> modyficators) {
 		this.id = id;
 		this.name = name;
@@ -30,6 +31,15 @@ public class Variable {
 		this.modyficators = modyficators;
 		this.min = min;
 		this.max = max;
+	}
+	
+	public Variable(String name, Set<FuzzySet> terms, double min, double max,
+			Set<Modificator> modyficators) {
+		this(null, name, terms, min, max, modyficators);
+	}
+	
+	public Variable(String name, double min, double max) {
+		this(null, name, min, max);
 	}
 
 	public int getId() {
@@ -48,11 +58,11 @@ public class Variable {
 		this.name = name;
 	}
 
-	public Map<Integer, FuzzySet> getTerms() {
+	public Set<FuzzySet> getTerms() {
 		return terms;
 	}
 
-	public void setTerms(Map<Integer, FuzzySet> terms) {
+	public void setTerms(Set<FuzzySet> terms) {
 		this.terms = terms;
 	}
 
@@ -73,11 +83,28 @@ public class Variable {
 	}
 	
 	public void addFuzzySet(FuzzySet set){
-		terms.put(set.getId(), set);
+		terms.add(set);
 	}
 	
-	public FuzzySet getFuzzySet(int id){
-		return terms.get(id);
+	public FuzzySet getFuzzySet(Integer id){
+		for(FuzzySet fs : terms){
+			if (fs.getId() == id){
+				return fs;
+			}
+		}
+		return null;
 	}
 
+	public VariableDO getDO(){
+		Set<FuzzySetDO> terms = new HashSet<FuzzySetDO>();
+		for(FuzzySet fs : this.terms){
+			terms.add(fs.getDO());
+		}
+		Set<ModificatorDO> mods = new HashSet<ModificatorDO>();
+		for(Modificator m : this.modyficators){
+			mods.add(m.getDO());
+		}
+		return new VariableDO(name, min, max, terms, null, mods);
+	}
+	
 }

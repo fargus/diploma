@@ -1,7 +1,26 @@
 package com.home.main.variable;
 
-public interface Operator {
+public enum Operator {
 
-	static final String AND = "AND";
-	static final String OR = "OR";
+	AND(0), OR(1);
+	
+	private int id;
+	
+	private Operator(int id){
+		this.id = id;
+	}
+	
+	public int getCode(){
+		return id;
+	}
+	
+	public static Operator getOp(int code){
+		for(Operator op : values()){
+			if (op.id == code){
+				return op;
+			}
+		}
+		
+		return null;
+	}
 }

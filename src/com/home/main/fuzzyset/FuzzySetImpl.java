@@ -1,17 +1,22 @@
 package com.home.main.fuzzyset;
 
+import com.home.main.db.entities.FuzzySetDO;
 import com.home.main.func.Func;
 
 public class FuzzySetImpl implements FuzzySet {
 
-	private int id;
+	private Integer id;
 	private String name;
 	private Func func;
 	
-	public FuzzySetImpl(int id, String name, Func func){
+	public FuzzySetImpl(Integer id, String name, Func func){
 		this.id=id;
 		this.name = name;
 		this.func = func;
+	}
+	
+	public FuzzySetImpl(String name, Func func){
+		this(null, name, func);
 	}
 	
 	
@@ -27,8 +32,17 @@ public class FuzzySetImpl implements FuzzySet {
 
 
 	@Override
-	public int getId() {
+	public Integer getId() {
 		return id;
+	}
+	
+	public FuzzySetDO getDO(){
+		return new FuzzySetDO(id, name, null, func.getDO(), null);
+	}
+
+	@Override
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

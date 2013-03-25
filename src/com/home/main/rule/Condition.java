@@ -8,21 +8,33 @@ import com.home.main.variable.Variable;
 
 public class Condition extends Statement {
 	
-	private String operator = Operator.AND;
+	private Operator operator = Operator.AND;
 
-	public Condition(int id, FuzzySet term, Variable var, Modificator mod) {
+	public Condition(Integer id, FuzzySet term, Variable var, Modificator mod) {
 		super(id, term, var, mod);
 	}
 	
-	public Condition(int id, FuzzySet term, Variable var) {
+	public Condition(FuzzySet term, Variable var, Modificator mod) {
+		super(null, term, var, mod);
+	}
+	
+	public Condition(Integer id, FuzzySet term, Variable var) {
 		super(id, term, var);
 	}
+	
+	public Condition(FuzzySet term, Variable var) {
+		super(null, term, var);
+	}
+	
+	public Condition(Statement stat){
+		super(stat.getId(), stat.getTerm(), stat.getVar(), stat.getMod());
+	}
 
-	public String getOperator() {
+	public Operator getOperator() {
 		return operator;
 	}
 
-	public void setOperator(String operator) {
+	public void setOperator(Operator operator) {
 		this.operator = operator;
 	}
 

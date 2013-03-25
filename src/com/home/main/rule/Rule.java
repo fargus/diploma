@@ -1,11 +1,17 @@
 package com.home.main.rule;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-public class Rule {
+import com.home.main.db.entities.ExpressionDO;
+import com.home.main.db.entities.RuleDO;
+import com.home.main.db.entities.StatementDO;
+
+public class Rule{
 	
 	private int id;
 	
@@ -89,6 +95,26 @@ public class Rule {
 			sb.append(next.getName());
 		}
 		return "RULE:"+id+" ["+sb.toString()+"]";
+	}
+	
+	public RuleDO getDO(){
+		ExpressionDO cond = new ExpressionDO();
+		ExpressionDO conc = new ExpressionDO();
+		cond.setOp(this.getConditions().get(0).getOperator().getCode());
+		conc.setOp(this.getConclusions().get(0).getOperator().getCode());
+		
+		Set<StatementDO> conds = new HashSet<StatementDO>();
+		Set<StatementDO> concs = new HashSet<StatementDO>();
+		for (Condition c : getConditions()){
+			conds.add(c.getSDO());
+		}
+		for (Conclusion c : getConclusions()){
+			concs.add(c.getSDO());
+		}
+		
+		cond.setStatement(conds);
+		conc.setStatement(concs);
+		return new RuleDO(cond, conc);
 	}
 	
 }

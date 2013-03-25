@@ -1,5 +1,9 @@
 package com.home.main.db.entities;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,13 +15,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.home.main.fuzzyset.FuzzySet;
+import com.home.main.variable.Modificator;
+import com.home.main.variable.Variable;
+
 @Entity
 @Table(name = "variable")
-public class VariableDO {
+public class VariableDO implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
@@ -34,18 +42,17 @@ public class VariableDO {
 	public VariableDO(){
 	}
 
-	public VariableDO(int id, String name, double min, double max,
+	public VariableDO(String name, double min, double max,
 			Set<FuzzySetDO> terms, StatementDO statement, Set<ModificatorDO> mod) {
-		this.id = id;
 		this.name = name;
 		this.min = min;
 		this.max = max;
-		this.terms = terms;
-		this.statement = statement;
-		this.mod = mod;
+		setTerms(terms);
+		setStatement(statement);
+		setMod(mod);
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -91,14 +98,34 @@ public class VariableDO {
 
 	public void setTerms(Set<FuzzySetDO> terms) {
 		this.terms = terms;
+		for (FuzzySetDO fs : this.terms){
+			fs.setVariable(this);
+		}
 	}
 
 	public void setStatement(StatementDO statement) {
-		this.statement = statement;
+		if (statement != null){
+			this.statement = statement;
+			this.statement.setVariable(this);
+		}
 	}
 
 	public void setMod(Set<ModificatorDO> mod) {
 		this.mod = mod;
+		for(ModificatorDO m : this.mod){
+			m.setVariable(this);
+		}
 	}
 
+	public Variable getDTO(){
+		Set<FuzzySet> terms = new HashSet<FuzzySet>();
+		Set<Modificator> mod = new HashSet<Modificator>();
+		for (FuzzySetDO fs : this.terms){
+			terms.add(fs.getDTO());
+		}
+		for (ModificatorDO m : this.mod){
+			mod.add(m.getDTO());
+		}
+		return new Variable(id, name, terms, min, max, mod);
+	}
 }

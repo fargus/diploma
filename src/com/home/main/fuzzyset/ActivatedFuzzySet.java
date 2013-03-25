@@ -1,5 +1,7 @@
 package com.home.main.fuzzyset;
 
+import com.home.main.db.entities.FuzzySetDO;
+
 public class ActivatedFuzzySet implements FuzzySet{
 
 	private double truthDegree = 1;
@@ -25,8 +27,18 @@ public class ActivatedFuzzySet implements FuzzySet{
 	}
 
 	@Override
-	public int getId() {
+	public Integer getId() {
 		return fuzzySet.getId();
+	}
+
+	@Override
+	public FuzzySetDO getDO() {
+		return fuzzySet.getDO();
+	}
+
+	@Override
+	public void setId(Integer id) {
+		this.fuzzySet.setId(id);
 	}
 
 }

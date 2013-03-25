@@ -1,16 +1,27 @@
 package com.home.main.db.entities;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.home.main.rule.Conclusion;
+import com.home.main.rule.Condition;
+import com.home.main.rule.Rule;
+import com.home.main.variable.Operator;
+
 @Entity
 @Table(name = "rule")
-public class RuleDO {
+@NamedQuery(name="Rules", query="select item from RuleDO as item")
+public class RuleDO implements Serializable {
 	
 	@Id
 	@GeneratedValue
@@ -25,8 +36,7 @@ public class RuleDO {
 	public RuleDO() {
 	}
 
-	public RuleDO(int id, ExpressionDO cond, ExpressionDO conc) {
-		this.id = id;
+	public RuleDO(ExpressionDO cond, ExpressionDO conc) {
 		this.cond = cond;
 		this.conc = conc;
 	}
@@ -53,6 +63,26 @@ public class RuleDO {
 
 	public void setConc(ExpressionDO conc) {
 		this.conc = conc;
+	}
+	
+	public Rule getDTO(){
+		List<Condition> conds = new ArrayList<Condition>();
+		List<Conclusion> concs = new ArrayList<Conclusion>();
+		for (StatementDO s : cond.getStatement()){
+			Condition c = new Condition(s.getDTO());
+			c.setOperator(Operator.getOp(cond.getOp()));
+			conds.add(c);
+			
+		}
+		
+		for (StatementDO s : conc.getStatement()){
+			Conclusion c = new Conclusion(s.getDTO());
+			c.setOperator(Operator.getOp(cond.getOp()));
+			c.setWeight(s.getWeight());
+			concs.add(c);
+			
+		}
+		return new Rule(id, conds, concs);
 	}
 	
 }

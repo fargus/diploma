@@ -1,5 +1,7 @@
 package com.home.main.db.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +12,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.home.main.fuzzyset.FuzzySet;
+import com.home.main.fuzzyset.FuzzySetImpl;
+
 @Entity
 @Table(name = "fuzzyset")
-public class FuzzySetDO {
+public class FuzzySetDO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 	@Column(nullable = false)
 	private String name;
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -31,7 +36,7 @@ public class FuzzySetDO {
 	public FuzzySetDO(){
 	}
 
-	public FuzzySetDO(int id, String name, VariableDO variable, FuncDO func,
+	public FuzzySetDO(Integer id, String name, VariableDO variable, FuncDO func,
 			StatementDO statement) {
 		this.id = id;
 		this.name = name;
@@ -80,4 +85,8 @@ public class FuzzySetDO {
 		this.statement = statement;
 	}
 	
+	public FuzzySet getDTO(){
+		return new FuzzySetImpl(id, name, func.getDTO());
+	}
+
 }

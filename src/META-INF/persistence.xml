@@ -9,7 +9,6 @@
         <class>com.home.main.db.entities.ModificatorDO</class>
         <class>com.home.main.db.entities.RuleDO</class>
         <class>com.home.main.db.entities.ExpressionDO</class>
-        <class>com.home.main.db.entities.ExprStateDO</class>
         <properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
       		<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
@@ -17,7 +16,6 @@
       		<property name="hibernate.connection.username" value="root"/>
       		<property name="hibernate.connection.password" value="dbuser"/>
       		<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/fuzzy"/>
-      		<property name="hibernate.hbm2ddl.auto" value="create-drop"/>
         </properties>
     </persistence-unit>
 </persistence>

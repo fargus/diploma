@@ -1,44 +1,72 @@
 package com.home.main.db.entities;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.home.main.variable.Statement;
 
 @Entity
-@Table(name="statement")
+@Table(name = "statement")
 public class StatementDO {
-	
+
 	@Id
 	@GeneratedValue
 	private Integer id;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "variable_id")
 	private VariableDO variable;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fuzzyset_id")
 	private FuzzySetDO fuzzyset;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "modificator_id")
 	private ModificatorDO modificator;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "statement")
-	private Set<ExprStateDO> exprstate;
 
-	public StatementDO(){
-		
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "exprstate", joinColumns = @JoinColumn(name = "statement_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "expression_id", referencedColumnName = "ID"))
+	private Set<ExpressionDO> expression;
+
+	@Column(nullable = true)
+	private Double weight;
+
+	public Double getWeight() {
+		return weight;
 	}
 
-	public int getId() {
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
+
+	public StatementDO() {
+
+	}
+
+	public Integer getId() {
 		return id;
+	}
+
+	public StatementDO(VariableDO variable, FuzzySetDO fuzzyset,
+			ModificatorDO modificator, Set<ExpressionDO> expression,
+			Double weight) {
+		this.variable = variable;
+		this.fuzzyset = fuzzyset;
+		this.modificator = modificator;
+		this.expression = expression;
+		this.weight = weight;
 	}
 
 	public VariableDO getVariable() {
@@ -53,11 +81,7 @@ public class StatementDO {
 		return modificator;
 	}
 
-	public Set<ExprStateDO> getExprstate() {
-		return exprstate;
-	}
-
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -73,10 +97,27 @@ public class StatementDO {
 		this.modificator = modificator;
 	}
 
-	public void setExprstate(Set<ExprStateDO> exprstate) {
-		this.exprstate = exprstate;
+	public Set<ExpressionDO> getExpression() {
+		return expression;
+	}
+
+	public void setExpression(Set<ExpressionDO> expression) {
+		this.expression = expression;
+		for(ExpressionDO e : this.expression){
+			e.addStatement(this);
+		}
+	}
+
+	public Statement getDTO() {
+		return new Statement(id, fuzzyset.getDTO(), variable.getDTO(),
+				(modificator != null) ? modificator.getDTO() : null);
 	}
 	
-	
+	public void addExpression(ExpressionDO e){
+		if (expression == null){
+			expression = new HashSet<ExpressionDO>();
+		}
+		expression.add(e);
+	}
 
 }

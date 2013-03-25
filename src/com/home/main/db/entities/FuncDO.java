@@ -1,5 +1,6 @@
 package com.home.main.db.entities;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,14 +11,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.home.main.func.Func;
+import com.home.main.func.FuncType;
+import com.home.main.func.FuncUtil;
+
 
 @Entity
 @Table(name="func")
-public class FuncDO {
+public class FuncDO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 	@Column(nullable = false)
 	private Double a;
 	@Column(nullable = false)
@@ -34,7 +39,7 @@ public class FuncDO {
 	public FuncDO(){
 	}
 	
-	public FuncDO(int id, Double a, Double b, Double c, Double d, int type,
+	public FuncDO(Integer id, Double a, Double b, Double c, Double d, int type,
 			Set<FuzzySetDO> terms) {
 		this.id = id;
 		this.a = a;
@@ -99,6 +104,12 @@ public class FuncDO {
 
 	public void setTerms(Set<FuzzySetDO> terms) {
 		this.terms = terms;
+	}
+	
+	public Func getDTO(){
+		Func f = FuncUtil.createFunc(a, b, c, d, FuncType.getTypeByCode(type));
+		f.setId(id);
+		return f;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.home.main;
+package com.home.main.algorithm;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,7 +58,7 @@ public class Algorithm {
 		for (Condition c : rb.getConditions()) {
 			Double inputVal = inputVals.get(c.getVar().getId());
 			if (inputVal == null) {
-				throw new Exception("Supplied input value is null");
+				throw new Exception("Supplied input value is null: Variable:["+c.getVar().getId()+"]");
 			}
 			result.put(c.getId(), c.getValue(inputVal));
 			log.trace("Result : Condition id:[" + c.getId() + "] Input value:["

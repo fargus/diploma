@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.home.main.variable.Modificator;
+
 @Entity
 @Table(name = "modificator")
 public class ModificatorDO {
@@ -68,4 +70,7 @@ public class ModificatorDO {
 		this.statement = statement;
 	}
 	
+	public Modificator getDTO(){
+		return Modificator.getModById(id);
+	}
 }

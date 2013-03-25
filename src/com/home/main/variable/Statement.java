@@ -1,20 +1,22 @@
 package com.home.main.variable;
 
+import com.home.main.db.entities.FuzzySetDO;
+import com.home.main.db.entities.StatementDO;
 import com.home.main.fuzzyset.FuzzySet;
 
 public class Statement implements FuzzySet {
 	
-	private int id;
+	private Integer id;
 
 	private FuzzySet term;
 	private Variable var;
 	private Modificator mod;
 	
-	public Statement(int id, FuzzySet term, Variable var){
+	public Statement(Integer id, FuzzySet term, Variable var){
 		this(id, term, var, null);
 	}
 	
-	public Statement(int id, FuzzySet term, Variable var, Modificator mod){
+	public Statement(Integer id, FuzzySet term, Variable var, Modificator mod){
 		this.id=id;
 		this.term=term;
 		this.var=var;
@@ -61,8 +63,22 @@ public class Statement implements FuzzySet {
 		this.mod = mod;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
+	}
+
+	@Override
+	public FuzzySetDO getDO() {
+		return term.getDO();
+	}
+	
+	public StatementDO getSDO(){
+		return new StatementDO(var.getDO(), term.getDO(), (mod != null)?mod.getDO():null, null, null);
+	}
+
+	@Override
+	public void setId(Integer id) {
+		this.id=id;
 	}
 
 }
