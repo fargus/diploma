@@ -1,24 +1,26 @@
 package com.home.main.algorithm;
 
-public enum AggregationType {
-	MIN_CON, ALG_MUL, BOUND_MUL, DRAG_MUL;
+import com.home.main.variable.Operator;
 
-	public Double getVaDouble(Double a, Double b) {
+public enum AggregationType {
+	 ALG_MUL, MIN_CON, BOUND_MUL, DRAG_MUL;
+
+	public Double getValue(Double a, Double b, Operator op) {
 		switch (this) {
 		case MIN_CON: {
-			return minCon(a, b);
+			return (op == Operator.AND)?minCon(a, b): maxDis(a, b);
 		}
 		case ALG_MUL: {
-			return algMul(a, b);
+			return (op == Operator.AND)?algMul(a, b):algSum(a, b);
 		}
 		case BOUND_MUL: {
-			return boundMul(a, b);
+			return (op == Operator.AND)?boundMul(a, b):boundSum(a, b);
 		}
 		case DRAG_MUL: {
-			return dragMul(a, b);
+			return (op == Operator.AND)?dragMul(a, b):dragSum(a, b);
 		}
 		default: {
-			return minCon(a, b);
+			return (op == Operator.AND)?algMul(a, b):algSum(a, b);
 		}
 		}
 	}
@@ -43,5 +45,28 @@ public enum AggregationType {
 			return a;
 		}
 		return 0;
+	}
+	
+	private double maxDis(double a, double b) {
+		return Math.max(a, b);
+	}
+
+	private double algSum(double a, double b) {
+		return a + b - a * b;
+	}
+
+	private double boundSum(double a, double b) {
+		return Math.min(a + b, 1);
+	}
+
+	private double dragSum(double a, double b) {
+		if (a == 0 && b != 0) {
+			return b;
+		}
+		if (b == 0 && a != 0) {
+			return a;
+		}
+
+		return 1;
 	}
 }

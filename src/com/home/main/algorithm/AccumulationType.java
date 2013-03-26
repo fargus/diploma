@@ -1,7 +1,7 @@
 package com.home.main.algorithm;
 
 public enum AccumulationType {
-	MAX_DIS, ALG_SUM, BOUND_SUM, DRAG_SUM, LAMBDA_SUM;
+	 ALG_SUM, MAX_DIS, BOUND_SUM, DRAG_SUM, LAMBDA_SUM;
 
 	public Double getValue(Double a, Double b) {
 		switch (this) {

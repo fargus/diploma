@@ -3,11 +3,13 @@ package com.home.main.fuzzyset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.home.main.algorithm.AccumulationType;
 import com.home.main.db.entities.FuzzySetDO;
 
 public class UnionOfFuzzySet implements FuzzySet {
 	
 	private List<FuzzySet> sets;
+	private AccumulationType accType;
 	
 	public UnionOfFuzzySet(){
 		sets = new ArrayList<FuzzySet>();
@@ -22,7 +24,7 @@ public class UnionOfFuzzySet implements FuzzySet {
 	public double getValue(double d) {
 		double result = .0;
 		for(FuzzySet fs : sets){
-			result = Math.max(result, fs.getValue(d));
+			result = accType.getValue(result, fs.getValue(d));
 		}
 		
 		return result;
@@ -44,5 +46,9 @@ public class UnionOfFuzzySet implements FuzzySet {
 
 	@Override
 	public void setId(Integer id) {
+	}
+	
+	public void setAccumulationType(AccumulationType accumType){
+		this.accType = accumType;
 	}
 }

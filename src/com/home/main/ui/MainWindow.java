@@ -40,11 +40,14 @@ import net.miginfocom.swing.MigLayout;
 
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JLabel;
@@ -83,6 +86,7 @@ public class MainWindow extends JFrame {
 	private RuleBase rb;
 	private RuleSrvice rs = new RuleServiceImpl();
 	private Algorithm alg = new Algorithm();
+	private Map<Integer, Double> inputVal = new HashMap<Integer, Double>();
 
 	private JMenuBar menuBar;
 	private JMenu mnFile;
@@ -92,7 +96,6 @@ public class MainWindow extends JFrame {
 	private JPanel south;
 	private JPanel north;
 	private JPanel center;
-	private JComboBox comboBox;
 	private JComboBox comboBox_1;
 	private JComboBox comboBox_2;
 	private JButton btnNewButton;
@@ -155,6 +158,15 @@ public class MainWindow extends JFrame {
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				alg.setRuleBase(rb);
+				alg.setAccumType((AccumulationType)comboBox_2.getSelectedItem());
+				alg.setActType((ImplicationType)comboBox_3.getSelectedItem());
+				alg.setAggrType((AggregationType)comboBox_1.getSelectedItem());
+				try {
+					alg.run(inputVal);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		south.add(btnStart);
@@ -169,7 +181,8 @@ public class MainWindow extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				listModel.clear();
-				rb = rs.getAllRules();
+				//rb = rs.getAllRules();
+				rb = RuleBase.getTestBase();
 				for (Rule r : rb.getRules()){
 					listModel.addElement(r.toString());
 				}
@@ -179,11 +192,14 @@ public class MainWindow extends JFrame {
 		btnNewButton.setPreferredSize(new Dimension(50, 50));
 		north.add(btnNewButton);
 		
+		final JFrame t = this;
+		
 		btnSet = new JButton("Set");
 		btnSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ValuesDialog dialog = new ValuesDialog(rb.getInputVars());
+				ValuesDialog dialog = new ValuesDialog(rb.getInputVars(), inputVal, t);
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setModalityType(ModalityType.APPLICATION_MODAL);
 				dialog.setVisible(true);
 			}
 		});
@@ -198,14 +214,6 @@ public class MainWindow extends JFrame {
 		lblNewLabel.setPreferredSize(new Dimension(100, 20));
 		east.add(lblNewLabel);
 		
-		panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Accumulation Type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		east.add(panel);
-
-		comboBox_2 = new JComboBox();
-		panel.add(comboBox_2);
-		comboBox_2.setModel(new DefaultComboBoxModel(AccumulationType.values()));
-		
 		panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Aggregation Type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		east.add(panel_1);
@@ -214,26 +222,21 @@ public class MainWindow extends JFrame {
 		panel_1.add(comboBox_1);
 		comboBox_1.setModel(new DefaultComboBoxModel(AggregationType.values()));
 		
-		panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(null, "Activation Type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		east.add(panel_2);
-
-		comboBox = new JComboBox();
-		panel_2.add(comboBox);
-		comboBox.setModel(new DefaultComboBoxModel(ActivationType.values()));
-		
 		panel_3 = new JPanel();
-		panel_3.setBorder(new TitledBorder(null, "Implication Type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_3.setBorder(new TitledBorder(null, "Activation Type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		east.add(panel_3);
 		
 		comboBox_3 = new JComboBox();
 		panel_3.add(comboBox_3);
 		comboBox_3.setModel(new DefaultComboBoxModel(ImplicationType.values()));
 
-	}
-	
-	private void setupInputValues(Set<Variable> inputVars) {
-		
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Accumulation Type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		east.add(panel);
+
+		comboBox_2 = new JComboBox();
+		panel.add(comboBox_2);
+		comboBox_2.setModel(new DefaultComboBoxModel(AccumulationType.values()));
 	}
 
 }

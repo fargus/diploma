@@ -23,16 +23,31 @@ public class Algorithm {
 	private Map<Integer, Double> inputVals;
 	private Map<Integer, Double> outputVals;
 
-	public Map<Integer, Double> run(Map<Integer, Double> input)
-			throws Exception {
+	private AggregationType aggrType;
+	private ImplicationType actType;
+	private AccumulationType accumType;
+
+	public void setAggrType(AggregationType aggrType) {
+		this.aggrType = aggrType;
+	}
+
+	public void setActType(ImplicationType actType) {
+		this.actType = actType;
+	}
+
+	public void setAccumType(AccumulationType accumType) {
+		this.accumType = accumType;
+	}
+
+	public Map<Integer, Double> run(Map<Integer, Double> input) throws Exception {
 		log.info("Algorithm start >>>");
-		for(int i : input.keySet()){
-			log.debug("Input value: Variable:["+i+"] Value:["+input.get(i)+"]");
+		for (int i : input.keySet()) {
+			log.debug("Input value: Variable:[" + i + "] Value:[" + input.get(i) + "]");
 		}
 		inputVals = input;
 		outputVals = defuzzification(accumulation(activation(aggregation(fuzzyfication(inputVals)))));
-		for(int i : outputVals.keySet()){
-			log.debug("Output value: Variable:["+i+"] Value:["+outputVals.get(i)+"]");
+		for (int i : outputVals.keySet()) {
+			log.debug("Output value: Variable:[" + i + "] Value:[" + outputVals.get(i) + "]");
 		}
 		log.info("Algorithm stop <<<");
 
@@ -51,18 +66,16 @@ public class Algorithm {
 		return outputVals;
 	}
 
-	private Map<Integer, Double> fuzzyfication(Map<Integer, Double> inputVals)
-			throws Exception {
+	private Map<Integer, Double> fuzzyfication(Map<Integer, Double> inputVals) throws Exception {
 		log.trace("Fuzzification start!");
 		Map<Integer, Double> result = new HashMap<Integer, Double>();
 		for (Condition c : rb.getConditions()) {
 			Double inputVal = inputVals.get(c.getVar().getId());
 			if (inputVal == null) {
-				throw new Exception("Supplied input value is null: Variable:["+c.getVar().getId()+"]");
+				throw new Exception("Supplied input value is null: Variable:[" + c.getVar().getId() + "]");
 			}
 			result.put(c.getId(), c.getValue(inputVal));
-			log.trace("Result : Condition id:[" + c.getId() + "] Input value:["
-					+ inputVal + "] Func value:[" + c.getValue(inputVal) + "]");
+			log.trace("Result : Condition id:[" + c.getId() + "] Input value:[" + inputVal + "] Func value:[" + c.getValue(inputVal) + "]");
 		}
 		log.trace("Fuzzification complite!");
 		return result;
@@ -77,27 +90,18 @@ public class Algorithm {
 			if (itr.hasNext()) {
 				Condition c = itr.next();
 				resVal = inputVals.get(c.getId());
-				log.trace("First Condition:[" + c.getId()
-						+ "] Condition value:[" + inputVals.get(c.getId())
-						+ "]");
+				log.trace("First Condition:[" + c.getId() + "] Condition value:[" + inputVals.get(c.getId()) + "]");
 			}
 			while (itr.hasNext()) {
 				Condition c = itr.next();
-				if (c.getOperator().equals(Operator.AND)) {
-					resVal = resVal * inputVals.get(c.getId()); // can be
-																// changed
-				} else {
-					resVal = resVal + inputVals.get(c.getId()) - resVal
-							* inputVals.get(c.getId()); // can be changed
-				}
+				resVal = aggrType.getValue(resVal, inputVals.get(c.getId()), c.getOperator()); // can
+																								// be
 
-				log.trace("Condition:[" + c.getId() + "] Condition value:["
-						+ inputVals.get(c.getId()) + "] Condition operator:["
-						+ c.getOperator() + "] Result value:[" + resVal + "]");
+				log.trace("Condition:[" + c.getId() + "] Condition value:[" + inputVals.get(c.getId()) + "] Condition operator:[" + c.getOperator()
+						+ "] Result value:[" + resVal + "]");
 			}
 
-			log.trace("Result : Rule #" + r.getId() + " Aggregation value:["
-					+ resVal + "]");
+			log.trace("Result : Rule #" + r.getId() + " Aggregation value:[" + resVal + "]");
 
 			result.put(r.getId(), resVal);
 		}
@@ -106,20 +110,17 @@ public class Algorithm {
 		return result;
 	}
 
-	private Map<Integer, ActivatedFuzzySet> activation(
-			Map<Integer, Double> inputVal) {
+	private Map<Integer, ActivatedFuzzySet> activation(Map<Integer, Double> inputVal) {
 		log.trace("Activation start!");
 		Map<Integer, ActivatedFuzzySet> result = new HashMap<Integer, ActivatedFuzzySet>();
 		for (Rule r : rb.getRules()) {
 			for (Conclusion c : r.getConclusions()) {
-				double temp = inputVal.get(r.getId()) * c.getWeight();
+				double temp = actType.getValue(inputVal.get(r.getId()), c.getWeight());
 				result.put(c.getId(), new ActivatedFuzzySet(temp, c.getTerm())); // can
 																					// be
 																					// changed
-				log.trace("Rule #" + r.getId() + " Conclusion:[" + c.getId()
-						+ "] Conclusion weight:[" + c.getWeight()
-						+ "] Input value:[" + inputVal.get(r.getId())
-						+ "] Truth degree:[" + temp + "]");
+				log.trace("Rule #" + r.getId() + " Conclusion:[" + c.getId() + "] Conclusion weight:[" + c.getWeight() + "] Input value:["
+						+ inputVal.get(r.getId()) + "] Truth degree:[" + temp + "]");
 			}
 		}
 
@@ -127,8 +128,7 @@ public class Algorithm {
 		return result;
 	}
 
-	private Map<Integer, UnionOfFuzzySet> accumulation(
-			Map<Integer, ActivatedFuzzySet> inputVal) {
+	private Map<Integer, UnionOfFuzzySet> accumulation(Map<Integer, ActivatedFuzzySet> inputVal) {
 		log.trace("Accumulation start!");
 		Map<Integer, UnionOfFuzzySet> unions = new HashMap<Integer, UnionOfFuzzySet>();
 		for (Rule r : rb.getRules()) {
@@ -136,13 +136,12 @@ public class Algorithm {
 				UnionOfFuzzySet u = unions.get(c.getVar().getId());
 				if (u == null) {
 					u = new UnionOfFuzzySet();
+					u.setAccumulationType(accumType);
 					unions.put(c.getVar().getId(), u);
 				}
 				u.addFuzzySet(inputVal.get(c.getId()));
-				log.trace("Rule #" + r.getId() + " Variable:["
-						+ c.getVar().getId()
-						+ "] Activated term added to union:["
-						+ inputVal.get(c.getId()).getId() + "]");
+				log.trace("Rule #" + r.getId() + " Variable:[" + c.getVar().getId() + "] Activated term added to union:[" + inputVal.get(c.getId()).getId()
+						+ "]");
 			}
 		}
 
@@ -150,32 +149,28 @@ public class Algorithm {
 		return unions;
 	}
 
-	private Map<Integer, Double> defuzzification(
-			Map<Integer, UnionOfFuzzySet> inputVal) {
+	private Map<Integer, Double> defuzzification(Map<Integer, UnionOfFuzzySet> inputVal) {
 		log.trace("Defuzzification start!");
-		
+
 		Map<Integer, Double> outputValues = new HashMap<Integer, Double>();
 		for (Variable v : rb.getOutputVars()) {
-			double i1 = integral2(v.getMin(), v.getMax(),
-					inputVal.get(v.getId()), true);
-			double i2 = integral2(v.getMin(), v.getMax(),
-					inputVal.get(v.getId()), false);
+			double i1 = integral2(v.getMin(), v.getMax(), inputVal.get(v.getId()), true);
+			double i2 = integral2(v.getMin(), v.getMax(), inputVal.get(v.getId()), false);
 			outputValues.put(v.getId(), i1 / i2);
-			log.trace("Variable:["+v.getId()+"] Value:["+outputValues.get(v.getId())+"]");
+			log.trace("Variable:[" + v.getId() + "] Value:[" + outputValues.get(v.getId()) + "]");
 		}
-		
+
 		log.trace("Defuzzyfucation complite!");
 		return outputValues;
 	}
 
-	private double integral(double min, double max, UnionOfFuzzySet u,
-			boolean isUp) {
+	private double integral(double min, double max, UnionOfFuzzySet u, boolean isUp) {
 		log.trace("Integral start!");
-		
-		for(double i = min; i<=max; i+=(max-min)/20){
-			log.trace("Union value:["+i+"]-["+u.getValue(i)+"]");
+
+		for (double i = min; i <= max; i += (max - min) / 20) {
+			log.trace("Union value:[" + i + "]-[" + u.getValue(i) + "]");
 		}
-		
+
 		double result = .0;
 		double n = min;
 		double step = (max - min) / 1000;
@@ -192,28 +187,27 @@ public class Algorithm {
 			result += ((f1 + f2) / 2) * step;
 			n += step;
 		}
-		
+
 		log.trace("Integral complite!");
 		return result;
 	}
-	
-	private double integral2(double min, double max, UnionOfFuzzySet u,
-			boolean isUp) {
+
+	private double integral2(double min, double max, UnionOfFuzzySet u, boolean isUp) {
 		log.trace("Integral start!");
-		
-		for(double i = min; i<=max; i+=(max-min)/20){
-			log.trace("Union value:["+i+"]-["+u.getValue(i)+"]");
+
+		for (double i = min; i <= max; i += (max - min) / 20) {
+			log.trace("Union value:[" + i + "]-[" + u.getValue(i) + "]");
 		}
-		
+
 		double result = .0;
-		for(double i = min; i<=max; i+=1){
-			if (isUp){
-				result+=i*u.getValue(i);
-			}else{
-				result+=u.getValue(i);
+		for (double i = min; i <= max; i += 1) {
+			if (isUp) {
+				result += i * u.getValue(i);
+			} else {
+				result += u.getValue(i);
 			}
 		}
-		
+
 		log.trace("Integral complite!");
 		return result;
 	}

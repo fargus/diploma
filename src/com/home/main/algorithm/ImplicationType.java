@@ -2,9 +2,9 @@ package com.home.main.algorithm;
 
 public enum ImplicationType {
 
-	KLINEDAISE, ZADDE, MOMDANY, LARSEN, LUKASHEVICH, GEDEL, GEINS, GOGUEN, KLINE_DEISE_LUK, FUZZY_PROBABILITY, LIMITED_FUZZY_PROB, VADI, YAGR;
+	MOMDANY, KLINEDAISE, ZADDE, LARSEN, LUKASHEVICH, GEDEL, GEINS, GOGUEN, KLINE_DEISE_LUK, FUZZY_PROBABILITY, LIMITED_FUZZY_PROB, VADI, YAGR;
 
-	public Double getDouble(Double a, Double b) {
+	public Double getValue(Double a, Double b) {
 		switch (this) {
 		case KLINEDAISE: {
 			return klineDaise(a, b);
