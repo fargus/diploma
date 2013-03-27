@@ -115,7 +115,7 @@ public class Algorithm {
 		Map<Integer, ActivatedFuzzySet> result = new HashMap<Integer, ActivatedFuzzySet>();
 		for (Rule r : rb.getRules()) {
 			for (Conclusion c : r.getConclusions()) {
-				double temp = actType.getValue(inputVal.get(r.getId()), c.getWeight());
+				double temp = actType.getValue(c.getWeight(), inputVal.get(r.getId()));
 				result.put(c.getId(), new ActivatedFuzzySet(temp, c.getTerm())); // can
 																					// be
 																					// changed
