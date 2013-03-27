@@ -36,8 +36,6 @@ import com.home.main.rule.Rule;
 import com.home.main.rule.RuleBase;
 import com.home.main.variable.Variable;
 
-import net.miginfocom.swing.MigLayout;
-
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dialog.ModalityType;
@@ -87,7 +85,8 @@ public class MainWindow extends JFrame {
 	private RuleSrvice rs = new RuleServiceImpl();
 	private Algorithm alg = new Algorithm();
 	private Map<Integer, Double> inputVal = new HashMap<Integer, Double>();
-
+	private Map<Integer, Double> result = new HashMap<Integer, Double>();
+	
 	private JMenuBar menuBar;
 	private JMenu mnFile;
 	private JMenuItem exitItem;
@@ -101,7 +100,7 @@ public class MainWindow extends JFrame {
 	private JButton btnNewButton;
 	private JLabel lblNewLabel;
 	private JList list;
-	private DefaultListModel<String> listModel;
+	private DefaultListModel listModel;
 	private JButton btnStart;
 	private JPanel panel;
 	private JPanel panel_1;
@@ -140,11 +139,11 @@ public class MainWindow extends JFrame {
 		contentPane.add(east, BorderLayout.EAST);
 
 		center = new JPanel();
-		center.setBorder(BorderFactory.createLineBorder(Color.lightGray, 5, true));
+		center.setBorder(BorderFactory.createLineBorder(Color.lightGray, 5));
 		contentPane.add(center, BorderLayout.CENTER);
 		center.setLayout(new BorderLayout(0, 0));
 
-		listModel = new DefaultListModel<String>();
+		listModel = new DefaultListModel();
 		list = new JList(listModel);
 		center.add(list);
 
@@ -167,6 +166,8 @@ public class MainWindow extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				result = alg.getLastResult();
+				showResult();
 			}
 		});
 		south.add(btnStart);
@@ -200,6 +201,7 @@ public class MainWindow extends JFrame {
 				ValuesDialog dialog = new ValuesDialog(rb.getInputVars(), inputVal, t);
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+				dialog.setLocationRelativeTo(t);
 				dialog.setVisible(true);
 			}
 		});
@@ -237,6 +239,14 @@ public class MainWindow extends JFrame {
 		comboBox_2 = new JComboBox();
 		panel.add(comboBox_2);
 		comboBox_2.setModel(new DefaultComboBoxModel(AccumulationType.values()));
+	}
+	
+	private void showResult(){
+		ResultDialog dialog = new ResultDialog(rb.getOutputVars(), result, this);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+		dialog.setLocationRelativeTo(this);
+		dialog.setVisible(true);
 	}
 
 }
