@@ -2,6 +2,12 @@ package com.home.main.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -9,8 +15,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -19,14 +23,12 @@ import com.home.main.db.dao.RuleSrvice;
 import com.home.main.rule.RuleBase;
 import com.home.main.variable.Variable;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 public class ResultDialog extends JDialog {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8600919397233872335L;
 
 	private final JPanel contentPanel = new JPanel();
 
@@ -36,11 +38,11 @@ public class ResultDialog extends JDialog {
 	public static void main(String[] args) {
 		try {
 			RuleSrvice rs = new RuleServiceImpl();
-			RuleBase rb = rs.getAllRules();
+			RuleBase rb = rs.getRuleBase();
 			Map<Integer, Double> result = new HashMap<Integer, Double>();
 			Random rnd = new Random();
-			for(Variable v : rb.getOutputVars()){
-				result.put(v.getId(), rnd.nextDouble()*100);
+			for (Variable v : rb.getOutputVars()) {
+				result.put(v.getId(), rnd.nextDouble() * 100);
 			}
 			ResultDialog dialog = new ResultDialog(rb.getOutputVars(), result, null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -65,7 +67,7 @@ public class ResultDialog extends JDialog {
 				JPanel temp = new JPanel();
 				temp.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 				temp.add(new JLabel("Variable:[ID=" + v.getId() + " Name=" + v.getName() + "]"));
-				temp.add(new JLabel("Result: ["+result.get(v.getId())+"]"));
+				temp.add(new JLabel("Result: [" + result.get(v.getId()) + "]"));
 				contentPanel.add(temp);
 			}
 		}

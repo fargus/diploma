@@ -1,66 +1,64 @@
 package com.home.main.ui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.JComboBox;
-import javax.swing.ListModel;
-
-import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-import javax.swing.SwingConstants;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-
-import org.hibernate.ejb.criteria.predicate.ExistsPredicate;
-import org.hibernate.envers.tools.graph.Vertex;
-
-import com.home.main.db.dao.RuleServiceImpl;
-import com.home.main.db.dao.RuleSrvice;
-import com.home.main.rule.Rule;
-import com.home.main.rule.RuleBase;
-import com.home.main.variable.Variable;
-
 import java.awt.Color;
-import java.awt.ComponentOrientation;
+import java.awt.Component;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.swing.JLabel;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import com.home.main.algorithm.AccumulationType;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+
+import com.home.main.algorithm.AccumulationType;
 import com.home.main.algorithm.AggregationType;
-import com.home.main.algorithm.ActivationType;
 import com.home.main.algorithm.Algorithm;
 import com.home.main.algorithm.ImplicationType;
+import com.home.main.db.dao.RuleServiceImpl;
+import com.home.main.db.dao.RuleSrvice;
+import com.home.main.func.Func;
+import com.home.main.rule.Rule;
+import com.home.main.rule.RuleBase;
+import javax.swing.Box;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class MainWindow extends JFrame {
 
-	private JPanel contentPane;
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1726502060471838452L;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -80,6 +78,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	final JFrame frame = this;
 	
 	private RuleBase rb;
 	private RuleSrvice rs = new RuleServiceImpl();
@@ -87,10 +86,14 @@ public class MainWindow extends JFrame {
 	private Map<Integer, Double> inputVal = new HashMap<Integer, Double>();
 	private Map<Integer, Double> result = new HashMap<Integer, Double>();
 	
+	private List<Func> functions = new ArrayList<Func>();
+	
 	private JMenuBar menuBar;
 	private JMenu mnFile;
 	private JMenuItem exitItem;
 
+	private JPanel mainPane;
+	private JPanel contentPane;
 	private JPanel east;
 	private JPanel south;
 	private JPanel north;
@@ -104,16 +107,50 @@ public class MainWindow extends JFrame {
 	private JButton btnStart;
 	private JPanel panel;
 	private JPanel panel_1;
-	private JPanel panel_2;
 	private JComboBox comboBox_3;
 	private JPanel panel_3;
 	private JButton btnSet;
-
+	private JScrollPane ruleScroll;
+	
+	private JTabbedPane tabbedPane;
+	
+	private JPanel funcPanel;
+	private DefaultListModel funcListModel;
+	private JList funcList;
+	private JScrollPane funcScroll;
+	private JPanel funcBtnPanel;
+	private JButton createFuncBtn;
+	private JButton editFuncBtn;
+	private JButton deleteFuncBtn;
+	private Box verticalBox;
+	private FuncPlot plot;
+	private JPanel plotPanel;
+	
 	public MainWindow() {
+		initUI();
+	}
+	
+	private void initUI(){
 		setTitle("Universal Fuzzy Logic Tool");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 577, 418);
-
+		setBounds(100, 100, 644, 455);
+		
+		initMenu();
+		
+		mainPane = new JPanel();
+		mainPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		mainPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(mainPane);
+		
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		mainPane.add(tabbedPane, BorderLayout.CENTER);
+		
+		initControlPane();
+		initRulePane();
+		initFuncPane();
+	}
+	
+	private void initMenu(){
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -129,28 +166,65 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnFile.add(exitItem);
-
+	}
+	
+	private void initControlPane(){
+		north = new JPanel();
+		north.setBorder(BorderFactory.createLineBorder(Color.gray));
+		FlowLayout flowLayout = (FlowLayout) north.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		//contentPane.add(north, BorderLayout.NORTH);
+		mainPane.add(north, BorderLayout.NORTH);
+		
+		btnNewButton = new JButton("C");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				connect();
+			}
+		});
+		btnNewButton.setToolTipText("Connect");
+		btnNewButton.setPreferredSize(new Dimension(50, 50));
+		north.add(btnNewButton);
+		
+		btnSet = new JButton("Set");
+		btnSet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ValuesDialog dialog = new ValuesDialog(rb.getInputVars(), inputVal, frame);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+				dialog.setLocationRelativeTo(frame);
+				dialog.setVisible(true);
+			}
+		});
+		btnSet.setToolTipText("Set Input Values");
+		btnSet.setPreferredSize(new Dimension(50, 50));
+		north.add(btnSet);
+	}
+	
+	private void initRulePane(){
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		tabbedPane.addTab("Rules", contentPane);
 
 		east = new JPanel();
 		contentPane.add(east, BorderLayout.EAST);
 
 		center = new JPanel();
-		center.setBorder(BorderFactory.createLineBorder(Color.lightGray, 5));
+		//center.setBorder(BorderFactory.createLineBorder(Color.lightGray, 5));
 		contentPane.add(center, BorderLayout.CENTER);
 		center.setLayout(new BorderLayout(0, 0));
 
 		listModel = new DefaultListModel();
 		list = new JList(listModel);
-		center.add(list);
+		ruleScroll = new JScrollPane(list);
+		center.add(ruleScroll);
 
 		south = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) south.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.RIGHT);
-		south.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		south.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		contentPane.add(south, BorderLayout.SOUTH);
 		
 		btnStart = new JButton("Start");
@@ -163,7 +237,6 @@ public class MainWindow extends JFrame {
 				try {
 					alg.run(inputVal);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				result = alg.getLastResult();
@@ -171,43 +244,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 		south.add(btnStart);
-
-		north = new JPanel();
-		north.setBorder(BorderFactory.createLineBorder(Color.gray));
-		FlowLayout flowLayout = (FlowLayout) north.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		contentPane.add(north, BorderLayout.NORTH);
-
-		btnNewButton = new JButton("C");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				listModel.clear();
-				//rb = rs.getAllRules();
-				rb = RuleBase.getTestBase();
-				for (Rule r : rb.getRules()){
-					listModel.addElement(r.toString());
-				}
-			}
-		});
-		btnNewButton.setToolTipText("Connect");
-		btnNewButton.setPreferredSize(new Dimension(50, 50));
-		north.add(btnNewButton);
-		
-		final JFrame t = this;
-		
-		btnSet = new JButton("Set");
-		btnSet.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ValuesDialog dialog = new ValuesDialog(rb.getInputVars(), inputVal, t);
-				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				dialog.setModalityType(ModalityType.APPLICATION_MODAL);
-				dialog.setLocationRelativeTo(t);
-				dialog.setVisible(true);
-			}
-		});
-		btnSet.setToolTipText("Set Input Values");
-		btnSet.setPreferredSize(new Dimension(50, 50));
-		north.add(btnSet);
 
 		east.setLayout(new BoxLayout(east, BoxLayout.Y_AXIS));
 
@@ -241,6 +277,75 @@ public class MainWindow extends JFrame {
 		comboBox_2.setModel(new DefaultComboBoxModel(AccumulationType.values()));
 	}
 	
+	private void initFuncPane(){
+		funcPanel = new JPanel();
+		funcPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		funcPanel.setLayout(new BorderLayout(0,0));
+		tabbedPane.addTab("Functions", funcPanel);
+		
+		funcListModel = new DefaultListModel();
+		funcList = new JList(funcListModel);
+		funcList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getValueIsAdjusting() == false) {
+					System.out.println(funcList.getSelectedValue());
+					plot.clear();
+					for(Object f : funcList.getSelectedValues()){
+						plot.addFunction((Func)f);
+					}
+				}
+			}
+		});
+		//funcList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		funcScroll = new JScrollPane(funcList);
+		funcPanel.add(funcScroll, BorderLayout.CENTER);
+		
+		funcBtnPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+		funcBtnPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		funcPanel.add(funcBtnPanel, BorderLayout.SOUTH);
+		createFuncBtn = new JButton("Create");
+		createFuncBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FuncDialog dialog = new FuncDialog(rs);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+				dialog.setVisible(true);
+			}
+		});
+		editFuncBtn = new JButton("Edit");
+		editFuncBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (funcList.getSelectedValue() == null){
+					JOptionPane.showMessageDialog(frame, "Choose func to edit!", "Error", JOptionPane.ERROR_MESSAGE);
+				}else{
+					FuncDialog dialog = new FuncDialog(rs,(Func) funcList.getSelectedValue());
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+					dialog.setVisible(true);
+				}
+			}
+		});
+		deleteFuncBtn = new JButton("Delete");
+		funcBtnPanel.add(createFuncBtn);
+		funcBtnPanel.add(editFuncBtn);
+		funcBtnPanel.add(deleteFuncBtn);
+		
+		plotPanel = new JPanel();
+		plot = new FuncPlot();
+		plotPanel.add(plot);
+		verticalBox = Box.createVerticalBox();
+		verticalBox.setPreferredSize(new Dimension(200, 150));
+		verticalBox.add(plotPanel);
+		verticalBox.add(new JLabel("Function"));
+		verticalBox.add(new JLabel("a:="));
+		verticalBox.add(new JLabel("b:="));
+		verticalBox.add(new JLabel("c:="));
+		verticalBox.add(new JLabel("d:="));
+		funcPanel.add(verticalBox, BorderLayout.EAST);
+		
+		
+	}
+	
 	private void showResult(){
 		ResultDialog dialog = new ResultDialog(rb.getOutputVars(), result, this);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -248,5 +353,21 @@ public class MainWindow extends JFrame {
 		dialog.setLocationRelativeTo(this);
 		dialog.setVisible(true);
 	}
+	
+	private void connect(){
+		functions = rs.getAllFunc();
+		rb = rs.getRuleBase();
+		updateView();
+	}
 
+	private void updateView(){
+		listModel.clear();
+		for (Rule r : rb.getRules()){
+			listModel.addElement(r);
+		}
+		funcListModel.clear();
+		for (Func f : functions){
+			funcListModel.addElement(f);
+		}
+	}
 }

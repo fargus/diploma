@@ -1,15 +1,22 @@
 package com.home.main.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
@@ -18,24 +25,16 @@ import com.home.main.db.dao.RuleServiceImpl;
 import com.home.main.db.dao.RuleSrvice;
 import com.home.main.variable.Variable;
 
-import java.awt.GridLayout;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JSpinner;
-import javax.swing.BoxLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 public class ValuesDialog extends JDialog {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6273500908759780037L;
 
 	private Map<Integer, JSpinner> spinnerMap = new HashMap<Integer, JSpinner>();
 	
 	private final JPanel contentPanel = new JPanel();
-	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -43,7 +42,7 @@ public class ValuesDialog extends JDialog {
 	public static void main(String[] args) {
 		try {
 			RuleSrvice rs = new RuleServiceImpl();
-			ValuesDialog dialog = new ValuesDialog(rs.getAllRules().getInputVars(), null, null);
+			ValuesDialog dialog = new ValuesDialog(rs.getRuleBase().getInputVars(), null, null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
