@@ -8,10 +8,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.home.main.func.FuncType;
-import com.home.main.func.FuncUtil;
-import com.home.main.fuzzyset.FuzzySet;
-import com.home.main.fuzzyset.FuzzySetImpl;
 import com.home.main.variable.Variable;
 
 public class RuleBase {

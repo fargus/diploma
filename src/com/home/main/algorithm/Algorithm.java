@@ -12,7 +12,6 @@ import com.home.main.rule.Conclusion;
 import com.home.main.rule.Condition;
 import com.home.main.rule.Rule;
 import com.home.main.rule.RuleBase;
-import com.home.main.variable.Operator;
 import com.home.main.variable.Variable;
 
 public class Algorithm {
@@ -164,6 +163,7 @@ public class Algorithm {
 		return outputValues;
 	}
 
+	@SuppressWarnings("unused")
 	private double integral(double min, double max, UnionOfFuzzySet u, boolean isUp) {
 		log.trace("Integral start!");
 
