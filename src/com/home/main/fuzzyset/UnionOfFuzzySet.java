@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.home.main.algorithm.AccumulationType;
 import com.home.main.db.entities.FuzzySetDO;
+import com.home.main.func.Func;
 
 public class UnionOfFuzzySet implements FuzzySet {
 	
@@ -50,5 +51,10 @@ public class UnionOfFuzzySet implements FuzzySet {
 	
 	public void setAccumulationType(AccumulationType accumType){
 		this.accType = accumType;
+	}
+
+	@Override
+	public Func getFunc() {
+		return null;
 	}
 }

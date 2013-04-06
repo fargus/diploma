@@ -15,6 +15,11 @@ public class Conclusion extends Statement {
 	public Conclusion(Integer id, FuzzySet term, Variable var, Modificator mod) {
 		super(id, term, var, mod);
 	}
+	
+	public Conclusion(Integer id, FuzzySet term, Variable var, Modificator mod, double weight) {
+		super(id, term, var, mod);
+		setWeight(weight);
+	}
 
 	public Conclusion(Integer id, FuzzySet term, Variable var) {
 		super(id, term, var);
@@ -55,4 +60,7 @@ public class Conclusion extends Statement {
 		return s;
 	}
 	
+	public String toString(){
+		return "Conclusion"+super.toString().substring(9)+" Weight=["+weight+"]";
+	}
 }

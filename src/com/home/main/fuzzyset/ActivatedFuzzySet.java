@@ -1,6 +1,7 @@
 package com.home.main.fuzzyset;
 
 import com.home.main.db.entities.FuzzySetDO;
+import com.home.main.func.Func;
 
 public class ActivatedFuzzySet implements FuzzySet{
 
@@ -39,6 +40,11 @@ public class ActivatedFuzzySet implements FuzzySet{
 	@Override
 	public void setId(Integer id) {
 		this.fuzzySet.setId(id);
+	}
+
+	@Override
+	public Func getFunc() {
+		return fuzzySet.getFunc();
 	}
 
 }

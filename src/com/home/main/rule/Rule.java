@@ -1,6 +1,5 @@
 package com.home.main.rule;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,19 +12,15 @@ import com.home.main.db.entities.StatementDO;
 
 public class Rule{
 	
-	private int id;
+	private Integer id;
 	
 	private List<Condition> conditions;
 	private List<Conclusion> conclusions;
 	
-	public Rule(int id) {
+	public Rule(Integer id, Condition condition, Conclusion conclusion) {
 		this.id = id;
 		this.conclusions = new ArrayList<Conclusion>();
 		this.conditions = new ArrayList<Condition>();
-	}
-	
-	public Rule(int id, Condition condition, Conclusion conclusion) {
-		this(id);
 		
 		if (conclusion == null){
 			throw new RuntimeException("Supplied conclusion is empty");
@@ -37,8 +32,17 @@ public class Rule{
 		conditions.add(condition);
 	}
 	
-	public Rule(int id, List<Condition> conditions, List<Conclusion> conclusions) {
+	public Rule(Condition condition, Conclusion conclusion) {
+		this(null, condition, conclusion);
+	}
+	
+	public Rule(Integer id, List<Condition> conditions, List<Conclusion> conclusions) {
 		this.id = id;
+		this.conclusions = conclusions;
+		this.conditions = conditions;
+	}
+	
+	public Rule(List<Condition> conditions, List<Conclusion> conclusions) {
 		this.conclusions = conclusions;
 		this.conditions = conditions;
 	}
@@ -59,8 +63,12 @@ public class Rule{
 		this.conclusions = conclusions;
 	}
 	
-	public int getId(){
+	public Integer getId(){
 		return id;
+	}
+	
+	public void setId(Integer id){
+		this.id = id;
 	}
 	
 	public void addConclusion(Conclusion conclusion){

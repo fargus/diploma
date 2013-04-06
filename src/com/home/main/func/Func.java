@@ -10,5 +10,11 @@ public interface Func {
 	
 	public Integer getId();
 	public void setId(Integer id);
+	
+	public Double getA();
+	public Double getB();
+	public Double getC();
+	public Double getD();
+	public FuncType getType();
 
 }

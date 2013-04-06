@@ -1,6 +1,7 @@
 package com.home.main.fuzzyset;
 
 import com.home.main.db.entities.FuzzySetDO;
+import com.home.main.func.Func;
 
 public interface FuzzySet {
 	
@@ -9,4 +10,5 @@ public interface FuzzySet {
 	String getName();
 	double getValue(double d);
 	FuzzySetDO getDO();
+	Func getFunc();
 }

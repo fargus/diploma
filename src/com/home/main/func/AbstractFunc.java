@@ -6,10 +6,10 @@ public abstract class AbstractFunc implements Func{
 	
 	private Integer id;
 	
-	protected double a;
-	protected double b;
-	protected double c;
-	protected double d;
+	protected Double a;
+	protected Double b;
+	protected Double c;
+	protected Double d;
 	
 	protected FuncType ft;
 	
@@ -27,5 +27,34 @@ public abstract class AbstractFunc implements Func{
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("FUNC:");
+		if(id != null){
+			sb.append(id+" ");
+		}else{
+			sb.append("# ");
+		}
+		sb.append("[a:["+a+"] b:["+b+"] c:["+c+"] d:["+ d+"]] Type="+ft.toString());
+		return sb.toString();
+	}
+	
+	public Double getA(){
+		return a;
+	}
+	public Double getB(){
+		return b;
+	}
+	public Double getC(){
+		return c;
+	}
+	public Double getD(){
+		return d;
+	}
+	
+	public FuncType getType(){
+		return ft;
 	}
 }

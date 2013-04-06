@@ -42,11 +42,11 @@ public class Variable {
 		this(null, name, min, max);
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -101,10 +101,78 @@ public class Variable {
 			terms.add(fs.getDO());
 		}
 		Set<ModificatorDO> mods = new HashSet<ModificatorDO>();
-		for(Modificator m : this.modyficators){
-			mods.add(m.getDO());
+		if (this.modyficators != null){
+			for(Modificator m : this.modyficators){
+				mods.add(m.getDO());
+			}
 		}
-		return new VariableDO(name, min, max, terms, null, mods);
+
+		return new VariableDO(id, name, min, max, terms, null, mods);
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(max);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(min);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Variable other = (Variable) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (Double.doubleToLongBits(max) != Double.doubleToLongBits(other.max))
+			return false;
+		if (Double.doubleToLongBits(min) != Double.doubleToLongBits(other.min))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+	
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Variable: ");
+		if(id != null){
+			sb.append("ID=["+id+"] ");
+		}
+		sb.append("Name=["+name+"] ");
+		sb.append("Min=["+min+"] ");
+		sb.append("Max=["+max+"] ");
+		sb.append("Terms=[ ");
+		if (terms != null){
+			for(FuzzySet f : terms){
+				sb.append("["+f.getId()+":"+f.getName()+"] ");
+			}
+		}
+		sb.append("] ");
+		
+		sb.append("Mods=[ ");
+		if (modyficators != null){
+			for(Modificator m : modyficators){
+				sb.append("["+m.toString()+"]");
+			}
+		}
+		sb.append("] ");
+		return sb.toString();
+	}
 }

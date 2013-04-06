@@ -2,6 +2,7 @@ package com.home.main.variable;
 
 import com.home.main.db.entities.FuzzySetDO;
 import com.home.main.db.entities.StatementDO;
+import com.home.main.func.Func;
 import com.home.main.fuzzyset.FuzzySet;
 
 public class Statement implements FuzzySet {
@@ -73,12 +74,30 @@ public class Statement implements FuzzySet {
 	}
 	
 	public StatementDO getSDO(){
-		return new StatementDO(var.getDO(), term.getDO(), (mod != null)?mod.getDO():null, null, null);
+		return new StatementDO(id, var.getDO(), term.getDO(), (mod != null)?mod.getDO():null, null, null);
 	}
 
 	@Override
 	public void setId(Integer id) {
 		this.id=id;
+	}
+	
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Statement: ");
+		if (id != null){
+			sb.append("ID=["+id+"] ");
+		}
+		sb.append("Variable=["+var.getId()+":"+var.getName()+"]");
+		sb.append(" IS ");
+		sb.append("Mod=["+((mod != null)?mod.getName():"")+"] ");
+		sb.append("Term=["+term.getId()+":"+term.getName()+"]");
+		return sb.toString();
+	}
+
+	@Override
+	public Func getFunc() {
+		return term.getFunc();
 	}
 
 }

@@ -1,9 +1,7 @@
 package com.home.main.db.entities;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.home.main.fuzzyset.FuzzySet;
@@ -22,6 +19,11 @@ import com.home.main.variable.Variable;
 @Entity
 @Table(name = "variable")
 public class VariableDO implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -810685299280094901L;
 	
 	@Id
 	@GeneratedValue
@@ -34,16 +36,17 @@ public class VariableDO implements Serializable {
 	private double max;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "variable")
 	private Set<FuzzySetDO> terms;
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "variable")
-	private StatementDO statement;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "variable")
+	private Set<StatementDO> statement;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "variable")
 	private Set<ModificatorDO> mod;
 	
 	public VariableDO(){
 	}
 
-	public VariableDO(String name, double min, double max,
-			Set<FuzzySetDO> terms, StatementDO statement, Set<ModificatorDO> mod) {
+	public VariableDO(Integer id, String name, double min, double max,
+			Set<FuzzySetDO> terms, Set<StatementDO> statement, Set<ModificatorDO> mod) {
+		this.id = id;
 		this.name = name;
 		this.min = min;
 		this.max = max;
@@ -72,7 +75,7 @@ public class VariableDO implements Serializable {
 		return terms;
 	}
 
-	public StatementDO getStatement() {
+	public Set<StatementDO> getStatement() {
 		return statement;
 	}
 
@@ -80,7 +83,7 @@ public class VariableDO implements Serializable {
 		return mod;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -103,11 +106,8 @@ public class VariableDO implements Serializable {
 		}
 	}
 
-	public void setStatement(StatementDO statement) {
-		if (statement != null){
-			this.statement = statement;
-			this.statement.setVariable(this);
-		}
+	public void setStatement(Set<StatementDO> statement) {
+		this.statement = statement;
 	}
 
 	public void setMod(Set<ModificatorDO> mod) {
@@ -126,6 +126,6 @@ public class VariableDO implements Serializable {
 		for (ModificatorDO m : this.mod){
 			mod.add(m.getDTO());
 		}
-		return new Variable(id, name, terms, min, max, mod);
+		return new Variable(id, name, terms, min, max, (mod.isEmpty())?null:mod);
 	}
 }

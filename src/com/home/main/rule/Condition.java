@@ -37,5 +37,9 @@ public class Condition extends Statement {
 	public void setOperator(Operator operator) {
 		this.operator = operator;
 	}
+	
+	public String toString(){
+		return "Condition"+super.toString().substring(9);
+	}
 
 }

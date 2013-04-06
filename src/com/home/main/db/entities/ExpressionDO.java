@@ -1,5 +1,6 @@
 package com.home.main.db.entities;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "expression")
-public class ExpressionDO {
+public class ExpressionDO implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5654815322787893254L;
 
 	@Id
 	@GeneratedValue

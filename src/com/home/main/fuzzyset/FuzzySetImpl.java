@@ -44,5 +44,20 @@ public class FuzzySetImpl implements FuzzySet {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		if(id != null){
+			sb.append("ID=["+id+"] ");
+		}
+		sb.append("Name=["+name+"] ");
+		sb.append("FUNC_ID=["+func.getId()+"]");
+		return sb.toString();
+	}
+
+	@Override
+	public Func getFunc() {
+		return func;
+	}
 
 }

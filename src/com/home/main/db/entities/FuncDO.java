@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -20,6 +21,11 @@ import com.home.main.func.FuncUtil;
 @Table(name="func")
 public class FuncDO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1516225142759714606L;
+	
 	@Id
 	@GeneratedValue
 	private Integer id;
@@ -33,7 +39,7 @@ public class FuncDO implements Serializable {
 	private Double d;
 	@Column(nullable = false)
 	private int type;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "func")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "func", fetch=FetchType.LAZY)
 	private Set<FuzzySetDO> terms;
 	
 	public FuncDO(){
@@ -50,7 +56,7 @@ public class FuncDO implements Serializable {
 		this.terms = terms;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -78,7 +84,7 @@ public class FuncDO implements Serializable {
 		return terms;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

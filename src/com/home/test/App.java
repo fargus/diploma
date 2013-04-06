@@ -1,21 +1,14 @@
 package com.home.test;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import com.home.main.db.dao.RuleServiceImpl;
 import com.home.main.db.dao.RuleSrvice;
-import com.home.main.db.entities.ExprStateDO;
-import com.home.main.db.entities.ExpressionDO;
-import com.home.main.db.entities.FuncDO;
-import com.home.main.db.entities.FuzzySetDO;
-import com.home.main.db.entities.StatementDO;
-import com.home.main.db.entities.VariableDO;
-import com.home.main.rule.RuleBase;
+import com.home.main.func.Func;
+import com.home.main.fuzzyset.FuzzySet;
+import com.home.main.rule.Conclusion;
+import com.home.main.rule.Condition;
+import com.home.main.rule.Rule;
+import com.home.main.variable.Statement;
+import com.home.main.variable.Variable;
 
 public class App {
 
@@ -28,6 +21,10 @@ public class App {
 //		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Fuzzy");
 //		EntityManager em = emf.createEntityManager();
 //		
+//		//List l = em.createQuery("Select item from FuzzySetDO as item").getResultList();
+//		FuzzySetDO f = em.find(FuzzySetDO.class, 1);
+//		System.out.println(f.getName());
+//		
 //		em.getTransaction().begin();
 //		em.persist(b);
 //		//em.persist(rule);
@@ -36,8 +33,37 @@ public class App {
 //		em.getTransaction().commit();
 		
 		RuleSrvice rs = new RuleServiceImpl();
-		RuleBase rb = rs.getAllRules();
-		System.out.println(rb.getNumRules());
+		//RuleBase rb = rs.getAllRules();
+		
+		for(Func f : rs.getAllFunc()){
+			System.out.println(f.toString());
+		}
+		
+		for(FuzzySet f : rs.getAllFuzzySet()){
+			System.out.println(f.toString());
+		}
+		
+		for(Variable f : rs.getAllVariable()){
+			System.out.println(f.toString());
+		}
+		
+		for(Statement f : rs.getAllStatements()){
+			System.out.println(f.toString());
+		}
+		
+		for(Condition f : rs.getAllCondition()){
+			System.out.println(f.toString());
+		}
+		
+		for(Conclusion f : rs.getAllConclusion()){
+			System.out.println(f.toString());
+		}
+		
+		for(Rule f : rs.getAllRule()){
+			System.out.println(f.toString());
+		}
+		
+		//System.out.println(rs.getAllFunc().get(0)..size());
 	}
 
 }

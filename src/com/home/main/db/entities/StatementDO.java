@@ -1,42 +1,51 @@
 package com.home.main.db.entities;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.home.main.variable.Statement;
 
 @Entity
 @Table(name = "statement")
-public class StatementDO {
+@NamedQuery(name = "Statements", query = "select item from StatementDO as item")
+public class StatementDO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6626463182827277248L;
 
 	@Id
 	@GeneratedValue
 	private Integer id;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "variable_id")
 	private VariableDO variable;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fuzzyset_id")
 	private FuzzySetDO fuzzyset;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "modificator_id")
 	private ModificatorDO modificator;
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinTable(name = "exprstate", joinColumns = @JoinColumn(name = "statement_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "expression_id", referencedColumnName = "ID"))
 	private Set<ExpressionDO> expression;
 
@@ -59,9 +68,10 @@ public class StatementDO {
 		return id;
 	}
 
-	public StatementDO(VariableDO variable, FuzzySetDO fuzzyset,
+	public StatementDO(Integer id, VariableDO variable, FuzzySetDO fuzzyset,
 			ModificatorDO modificator, Set<ExpressionDO> expression,
 			Double weight) {
+		this.id = id;
 		this.variable = variable;
 		this.fuzzyset = fuzzyset;
 		this.modificator = modificator;

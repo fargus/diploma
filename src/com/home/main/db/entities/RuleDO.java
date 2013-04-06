@@ -20,12 +20,17 @@ import com.home.main.variable.Operator;
 
 @Entity
 @Table(name = "rule")
-@NamedQuery(name="Rules", query="select item from RuleDO as item")
+@NamedQuery(name="Rules", query="select item from RuleDO as item left join item.cond as cond left join item.conc as conc")
 public class RuleDO implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9161827429181628064L;
 	
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "cond_id", referencedColumnName = "id")
 	private ExpressionDO cond;
@@ -41,7 +46,7 @@ public class RuleDO implements Serializable {
 		this.conc = conc;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -53,7 +58,7 @@ public class RuleDO implements Serializable {
 		return conc;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

@@ -2,15 +2,15 @@ package com.home.main.func;
 
 public class FuncUtil {
 	
-	public static Func createFunc(double a, double b, FuncType ft){
-		return createFunc(a, b, 0, 0, ft);
+	public static Func createFunc(Double a, Double b, FuncType ft){
+		return createFunc(a, b, null, null, ft);
 	}
 	
-	public static Func createFunc(double a, double b, double c, FuncType ft){
-		return createFunc(a, b, c, 0, ft);
+	public static Func createFunc(Double a, Double b, Double c, FuncType ft){
+		return createFunc(a, b, c, null, ft);
 	}
 	
-	public static Func createFunc(double a, double b, double c, double d, FuncType ft){
+	public static Func createFunc(Double a, Double b, Double c, Double d, FuncType ft){
 		
 		switch(ft){
 		case LINEDOWN:
@@ -39,7 +39,7 @@ public class FuncUtil {
 		}
 	}
 	
-	public static Func createComplexFunc(double a, double b, double c, double d, FuncType f1, FuncType f2){
+	public static Func createComplexFunc(Double a, Double b, Double c, Double d, FuncType f1, FuncType f2){
 		return new PComplexFunc(createFunc(a, b, f1), createFunc(c, d, f2));
 	}
 

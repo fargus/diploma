@@ -3,16 +3,9 @@ package com.home.test;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import org.hibernate.hql.ast.exec.StatementExecutor;
-
 import com.home.main.db.dao.CommonDAO;
 import com.home.main.db.dao.CommonDAOImpl;
 import com.home.main.db.entities.ExpressionDO;
-import com.home.main.db.entities.ExprStateDO;
 import com.home.main.db.entities.FuncDO;
 import com.home.main.db.entities.FuzzySetDO;
 import com.home.main.db.entities.RuleDO;
@@ -33,18 +26,65 @@ public class DBTest {
 		func1.setB(4.);
 		func1.setType(FuncType.LINEUP.getTypeCode());
 		
-		func1 = c.create(func1);
+		FuncDO func2 = new FuncDO();
+		func2.setA(3.);
+		func2.setB(6.);
+		func2.setType(FuncType.LINEDOWN.getTypeCode());
 		
-		System.out.println(func1.getId());
+		//c.create(func1);
+		//c.create(func2);
 		
 		FuzzySetDO f1 = new FuzzySetDO();
 		f1.setName("f1");
 		f1.setFunc(func1);
 		
-		c.create(f1);
+		FuzzySetDO f2 = new FuzzySetDO();
+		f2.setName("f2");
+		f2.setFunc(func2);
+		
+		//c.create(f1);
+		//c.create(f2);
 		
 		Set<FuzzySetDO> terms = new HashSet<FuzzySetDO>();
 		terms.add(f1);
+		terms.add(f2);
+		
+		VariableDO var1 = new VariableDO();
+		var1.setMax(100);
+		var1.setMin(0);
+		var1.setName("VAR1");
+		var1.setTerms(terms);
+		
+		//c.create(var1);
+		
+		StatementDO state1 = new StatementDO();
+		state1.setVariable(var1);
+		state1.setFuzzyset(f1);
+		
+		//state1 = c.create(state1);
+		
+		Set<StatementDO> stt1 = new HashSet<StatementDO>();
+		stt1.add(state1);
+		
+		ExpressionDO cond = new ExpressionDO();
+		cond.setOp(1);
+		cond.setStatement(stt1);
+		
+		//c.create(cond);
+		
+		RuleDO rule = new RuleDO();
+		rule.setConc(cond);
+		rule.setCond(cond);
+		
+		c.create(rule);
+		
+		System.out.println(var1.getId());
+		
+/*		
+		
+		c.create(f1);
+		
+		
 		func1.setTerms(terms);
 		
 		FuncDO func2 = new FuncDO();
@@ -68,13 +108,10 @@ public class DBTest {
 		StatementDO state1 = new StatementDO();
 		StatementDO state2 = new StatementDO();
 		
-		VariableDO var1 = new VariableDO();
+		
 		VariableDO var2 = new VariableDO();
 		
-		var1.setMax(100);
-		var1.setMin(0);
-		var1.setName("VAR1");
-		var1.setTerms(terms);
+		
 		f1.setVariable(var1);
 		var1.setStatement(state1);
 		
@@ -114,7 +151,7 @@ public class DBTest {
 		
 		rule.setConc(conc);
 		rule.setCond(cond);
-		
+*/		
 		//
 //		StatementDO s1 = new StatementDO();
 //		ExpressionDO e1 = new ExpressionDO();

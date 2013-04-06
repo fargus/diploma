@@ -1,37 +1,46 @@
 package com.home.main.db.entities;
 
+import java.io.Serializable;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.home.main.variable.Modificator;
 
 @Entity
 @Table(name = "modificator")
-public class ModificatorDO {
+public class ModificatorDO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5294998862320972619L;
+	
 	@Id
 	@GeneratedValue
 	private int id;
 	@Column(nullable = false)
 	private String name;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinColumn(name = "variable_id")
 	private VariableDO variable;
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "modificator")
-	private StatementDO statement;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "modificator")
+	private Set<StatementDO> statement;
 	
 	public ModificatorDO(){
 	}
 
-	public ModificatorDO(int id, String name, VariableDO variable,
-			StatementDO statement) {
+	public ModificatorDO(Integer id, String name, VariableDO variable,
+			Set<StatementDO> statement) {
 		this.id = id;
 		this.name = name;
 		this.variable = variable;
@@ -50,7 +59,7 @@ public class ModificatorDO {
 		return variable;
 	}
 
-	public StatementDO getStatement() {
+	public Set<StatementDO> getStatement() {
 		return statement;
 	}
 
@@ -66,7 +75,7 @@ public class ModificatorDO {
 		this.variable = variable;
 	}
 
-	public void setStatement(StatementDO statement) {
+	public void setStatement(Set<StatementDO> statement) {
 		this.statement = statement;
 	}
 	
