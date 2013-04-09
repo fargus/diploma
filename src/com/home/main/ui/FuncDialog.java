@@ -39,7 +39,7 @@ public class FuncDialog extends JDialog implements ChangeListener, ItemListener 
 	 */
 	public static void main(String[] args) {
 		try {
-			FuncDialog dialog = new FuncDialog(null);
+			FuncDialog dialog = new FuncDialog(null, null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -61,14 +61,17 @@ public class FuncDialog extends JDialog implements ChangeListener, ItemListener 
 	private JLabel b;
 	private JLabel c;
 	private JLabel d;
+	
+	private MainWindow main;
 
 	/**
 	 * Create the dialog.
 	 */
-	public FuncDialog(RuleSrvice rs, Func func){
+	public FuncDialog(MainWindow main, RuleSrvice rs, Func func){
 		this.func = func;
 		this.isNew = false;
 		this.rs = rs;
+		this.main=main;
 		initUI();
 		setTitle("Edit Function");
 	}
@@ -76,8 +79,9 @@ public class FuncDialog extends JDialog implements ChangeListener, ItemListener 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public FuncDialog(RuleSrvice rs) {
+	public FuncDialog(MainWindow main, RuleSrvice rs) {
 		this.rs=rs;
+		this.main=main;
 		initUI();
 		setTitle("Create Function");
 	}
@@ -168,6 +172,8 @@ public class FuncDialog extends JDialog implements ChangeListener, ItemListener 
 					public void actionPerformed(ActionEvent arg0) {
 						if (isNew){
 							rs.createFunc(func);
+							main.functions.put(func.getId(), func);
+							main.updateView();
 						}else{
 							
 						}

@@ -23,6 +23,8 @@ public class Variable {
 		setModyficator(new HashSet<Modificator>());
 		setTerms(new HashSet<FuzzySet>());
 	}
+	
+	
 	public Variable(Integer id, String name, Set<FuzzySet> terms, double min, double max,
 			Set<Modificator> modyficators) {
 		this.id = id;
@@ -36,6 +38,11 @@ public class Variable {
 	public Variable(String name, Set<FuzzySet> terms, double min, double max,
 			Set<Modificator> modyficators) {
 		this(null, name, terms, min, max, modyficators);
+	}
+	
+	public Variable(String name, Set<FuzzySet> terms, double min, double max) {
+		this(null, name, terms, min, max, null);
+		setModyficator(new HashSet<Modificator>());
 	}
 	
 	public Variable(String name, double min, double max) {
@@ -80,6 +87,14 @@ public class Variable {
 	
 	public double getMax(){
 		return max;
+	}
+	
+	public void setMin(double min){
+		this.min=min;
+	}
+	
+	public void setMax(double max){
+		this.max=max;
 	}
 	
 	public void addFuzzySet(FuzzySet set){

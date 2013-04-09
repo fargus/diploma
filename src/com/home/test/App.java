@@ -35,31 +35,31 @@ public class App {
 		RuleSrvice rs = new RuleServiceImpl();
 		//RuleBase rb = rs.getAllRules();
 		
-		for(Func f : rs.getAllFunc()){
+		for(Func f : rs.getAllFunc().values()){
 			System.out.println(f.toString());
 		}
 		
-		for(FuzzySet f : rs.getAllFuzzySet()){
+		for(FuzzySet f : rs.getAllFuzzySet().values()){
 			System.out.println(f.toString());
 		}
 		
-		for(Variable f : rs.getAllVariable()){
+		for(Variable f : rs.getAllVariable().values()){
 			System.out.println(f.toString());
 		}
 		
-		for(Statement f : rs.getAllStatements()){
+		for(Statement f : rs.getAllStatements().values()){
 			System.out.println(f.toString());
 		}
 		
-		for(Condition f : rs.getAllCondition()){
+		for(Condition f : rs.getAllCondition().values()){
 			System.out.println(f.toString());
 		}
 		
-		for(Conclusion f : rs.getAllConclusion()){
+		for(Conclusion f : rs.getAllConclusion().values()){
 			System.out.println(f.toString());
 		}
 		
-		for(Rule f : rs.getAllRule()){
+		for(Rule f : rs.getAllRule().values()){
 			System.out.println(f.toString());
 		}
 		

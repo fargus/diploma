@@ -75,18 +75,21 @@ public class RuleDO implements Serializable {
 		List<Conclusion> concs = new ArrayList<Conclusion>();
 		for (StatementDO s : cond.getStatement()){
 			Condition c = new Condition(s.getDTO());
-			c.setOperator(Operator.getOp(cond.getOp()));
+			//c.setOperator(Operator.getOp(cond.getOp()));
 			conds.add(c);
 			
 		}
 		
 		for (StatementDO s : conc.getStatement()){
 			Conclusion c = new Conclusion(s.getDTO());
-			c.setOperator(Operator.getOp(cond.getOp()));
+			//c.setOperator(Operator.getOp(cond.getOp()));
 			c.setWeight(s.getWeight());
 			concs.add(c);
 			
 		}
+		Rule r = new Rule(id, conds, concs);
+		r.setCondO(Operator.getOp(cond.getOp()));
+		r.setConcO(Operator.getOp(cond.getOp()));
 		return new Rule(id, conds, concs);
 	}
 	

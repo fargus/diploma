@@ -93,10 +93,10 @@ public class Algorithm {
 			}
 			while (itr.hasNext()) {
 				Condition c = itr.next();
-				resVal = aggrType.getValue(resVal, inputVals.get(c.getId()), c.getOperator()); // can
+				resVal = aggrType.getValue(resVal, inputVals.get(c.getId()), r.getCondO()); // can
 																								// be
 
-				log.trace("Condition:[" + c.getId() + "] Condition value:[" + inputVals.get(c.getId()) + "] Condition operator:[" + c.getOperator()
+				log.trace("Condition:[" + c.getId() + "] Condition value:[" + inputVals.get(c.getId()) + "] Condition operator:[" + r.getCondO()
 						+ "] Result value:[" + resVal + "]");
 			}
 

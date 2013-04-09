@@ -9,7 +9,6 @@ import com.home.main.fuzzyset.FuzzySetImpl;
 import com.home.main.rule.Conclusion;
 import com.home.main.rule.Condition;
 import com.home.main.rule.Rule;
-import com.home.main.rule.RuleBase;
 import com.home.main.variable.Variable;
 
 public class ShowerTest {
@@ -100,7 +99,7 @@ public class ShowerTest {
 		rs.createRule(r3);
 		rs.createRule(r4);
 		rs.createRule(r5);
-		
+		/*		
 		RuleBase rb1 = rs.getRuleBase();
 		System.out.println(rb1.getNumRules());
 		
@@ -109,6 +108,7 @@ public class ShowerTest {
 		for (Rule r : rb1.getRules()){
 			System.out.println(r.toString());
 		}
+		*/
 		/*
 		Map<Integer, Double> inputVal = new HashMap<Integer, Double>();
 		Random rnd = new Random();

@@ -9,6 +9,7 @@ import java.util.Set;
 import com.home.main.db.entities.ExpressionDO;
 import com.home.main.db.entities.RuleDO;
 import com.home.main.db.entities.StatementDO;
+import com.home.main.variable.Operator;
 
 public class Rule{
 	
@@ -16,6 +17,8 @@ public class Rule{
 	
 	private List<Condition> conditions;
 	private List<Conclusion> conclusions;
+	private Operator condO = Operator.AND;
+	private Operator concO = Operator.AND;
 	
 	public Rule(Integer id, Condition condition, Conclusion conclusion) {
 		this.id = id;
@@ -79,6 +82,13 @@ public class Rule{
 		conditions.add(condition);
 	}
 
+	public void removeConclusion(Conclusion conclusion){
+		conclusions.remove(conclusion);
+	}
+	
+	public void removeCondition(Condition condition){
+		conditions.remove(condition);
+	}
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -89,7 +99,7 @@ public class Rule{
 		}
 		while(itr.hasNext()){
 			Condition next = itr.next();
-			sb.append(" "+next.getOperator()+" ");
+			sb.append(" "+condO+" ");
 			sb.append(next.getName());
 		}
 		sb.append(" THEN ");
@@ -99,17 +109,17 @@ public class Rule{
 		}
 		while(itr2.hasNext()){
 			Conclusion next = itr2.next();
-			sb.append(" "+next.getOperator()+" ");
+			sb.append(" "+concO+" ");
 			sb.append(next.getName());
 		}
-		return "RULE:"+id+" ["+sb.toString()+"]";
+		return "RULE:"+((id != null)?id:"#")+" ["+sb.toString()+"]";
 	}
 	
 	public RuleDO getDO(){
 		ExpressionDO cond = new ExpressionDO();
 		ExpressionDO conc = new ExpressionDO();
-		cond.setOp(this.getConditions().get(0).getOperator().getCode());
-		conc.setOp(this.getConclusions().get(0).getOperator().getCode());
+		cond.setOp(this.getCondO().getCode());
+		conc.setOp(this.getConcO().getCode());
 		
 		Set<StatementDO> conds = new HashSet<StatementDO>();
 		Set<StatementDO> concs = new HashSet<StatementDO>();
@@ -123,6 +133,22 @@ public class Rule{
 		cond.setStatement(conds);
 		conc.setStatement(concs);
 		return new RuleDO(cond, conc);
+	}
+
+	public Operator getCondO() {
+		return condO;
+	}
+
+	public void setCondO(Operator condO) {
+		this.condO = condO;
+	}
+
+	public Operator getConcO() {
+		return concO;
+	}
+
+	public void setConcO(Operator concO) {
+		this.concO = concO;
 	}
 	
 }

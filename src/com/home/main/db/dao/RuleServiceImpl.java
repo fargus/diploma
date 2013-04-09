@@ -1,8 +1,8 @@
 package com.home.main.db.dao;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityExistsException;
@@ -177,73 +177,73 @@ public class RuleServiceImpl implements RuleSrvice {
 	}
 
 	@Override
-	public List<Statement> getAllStatements() {
-		List<Statement> result = new ArrayList<Statement>();
+	public Map<Integer, Statement> getAllStatements() {
+		Map<Integer, Statement> result = new HashMap<Integer, Statement>();
 		for(StatementDO s : dao.findAll(StatementDO.class)){
-			result.add(s.getDTO());
+			result.put(s.getId(), s.getDTO());
 		}
 		return result;
 	}
 
 	@Override
-	public List<Func> getAllFunc() {
-		List<Func> result = new ArrayList<Func>();
+	public Map<Integer, Func> getAllFunc() {
+		Map<Integer, Func> result = new HashMap<Integer, Func>();
 		for(FuncDO f : dao.findAll(FuncDO.class)){
-			result.add(f.getDTO());
+			result.put(f.getId(), f.getDTO());
 		}
 		
 		return result;
 	}
 
 	@Override
-	public List<FuzzySet> getAllFuzzySet() {
-		List<FuzzySet> result = new ArrayList<FuzzySet>();
+	public Map<Integer, FuzzySet> getAllFuzzySet() {
+		Map<Integer, FuzzySet> result = new HashMap<Integer, FuzzySet>();
 		for(FuzzySetDO f : dao.findAll(FuzzySetDO.class)){
-			result.add(f.getDTO());
+			result.put(f.getId(), f.getDTO());
 		}
 		
 		return result;
 	}
 
 	@Override
-	public List<Variable> getAllVariable() {
-		List<Variable> result = new ArrayList<Variable>();
+	public Map<Integer, Variable> getAllVariable() {
+		Map<Integer, Variable> result = new HashMap<Integer, Variable>();
 		for(VariableDO v : dao.findAll(VariableDO.class)){
-			result.add(v.getDTO());
+			result.put(v.getId(), v.getDTO());
 		}
 		
 		return result;
 	}
 
 	@Override
-	public List<Condition> getAllCondition() {
-		List<Condition> result = new ArrayList<Condition>();
+	public Map<Integer, Condition> getAllCondition() {
+		Map<Integer, Condition> result = new HashMap<Integer, Condition>();
 		for(StatementDO s : dao.findAll(StatementDO.class)){
 			if (s.getWeight() == null){
 				Statement st = s.getDTO();
-				result.add(new Condition(st.getId(), st.getTerm(), st.getVar(), st.getMod()));
+				result.put(st.getId(), new Condition(st.getId(), st.getTerm(), st.getVar(), st.getMod()));
 			}
 		}
 		return result;
 	}
 
 	@Override
-	public List<Conclusion> getAllConclusion() {
-		List<Conclusion> result = new ArrayList<Conclusion>();
+	public Map<Integer,  Conclusion> getAllConclusion() {
+		Map<Integer, Conclusion> result = new HashMap<Integer, Conclusion>();
 		for(StatementDO s : dao.findAll(StatementDO.class)){
 			if (s.getWeight() != null){
 				Statement st = s.getDTO();
-				result.add(new Conclusion(st.getId(), st.getTerm(), st.getVar(), st.getMod(), s.getWeight()));
+				result.put(st.getId(), new Conclusion(st.getId(), st.getTerm(), st.getVar(), st.getMod(), s.getWeight()));
 			}
 		}
 		return result;
 	}
 
 	@Override
-	public List<Rule> getAllRule() {
-		List<Rule> result = new ArrayList<Rule>();
+	public Map<Integer, Rule> getAllRule() {
+		Map<Integer, Rule> result = new HashMap<Integer, Rule>();
 		for(RuleDO r : dao.findAll(RuleDO.class)){
-			result.add(r.getDTO());
+			result.put(r.getId(), r.getDTO());
 		}
 		return result;
 	}

@@ -1,6 +1,6 @@
 package com.home.main.db.dao;
 
-import java.util.List;
+import java.util.Map;
 
 import com.home.main.func.Func;
 import com.home.main.fuzzyset.FuzzySet;
@@ -15,13 +15,13 @@ public interface RuleSrvice {
 	
 	public RuleBase getRuleBase();
 	
-	public List<Statement> getAllStatements();
-	public List<Func> getAllFunc();
-	public List<FuzzySet> getAllFuzzySet();
-	public List<Variable> getAllVariable();
-	public List<Condition> getAllCondition();
-	public List<Conclusion> getAllConclusion();
-	public List<Rule> getAllRule();
+	public Map<Integer, Statement> getAllStatements();
+	public Map<Integer, Func> getAllFunc();
+	public Map<Integer, FuzzySet> getAllFuzzySet();
+	public Map<Integer, Variable> getAllVariable();
+	public Map<Integer, Condition> getAllCondition();
+	public Map<Integer, Conclusion> getAllConclusion();
+	public Map<Integer, Rule> getAllRule();
 	
 	public void createFunc(Func func);
 	public void createFuzzySet(FuzzySet fs);
