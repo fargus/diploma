@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.home.main.fuzzyset.ActivatedFuzzySet;
+import com.home.main.fuzzyset.FuzzySet;
 import com.home.main.fuzzyset.UnionOfFuzzySet;
 import com.home.main.rule.Conclusion;
 import com.home.main.rule.Condition;
@@ -19,7 +20,7 @@ public class Algorithm2 {
 	private static final Logger log = Logger.getLogger(Algorithm2.class);
 	
 	private Rule[] rules;
-	private List<Variable> outputVars;
+	private Variable outputVar;
 	private double[] outputVals;
 	
 	private int numOfOutputVars;
@@ -28,20 +29,32 @@ public class Algorithm2 {
 	private ImplicationType actType;
 	private AccumulationType accumType;
 	
+	private List<Double> checkPoints = new ArrayList<Double>();
+	
+	private UnionOfFuzzySet union =new UnionOfFuzzySet();
+	
 	public void setRules(Collection<Rule> rules){
 		this.rules = rules.toArray(new Rule[rules.size()]);
-		this.outputVars = new ArrayList<Variable>();
-		for (Rule r : rules){
-			for(Conclusion c : r.getConclusions()){
-				Variable v = c.getVar();
-				if (!outputVars.contains(v)){
-					outputVars.add(v);
-				}
+		this.outputVar = rules.iterator().next().getConclusions().iterator().next().getVar();
+		this.numOfOutputVars = 1;
+		
+		for(FuzzySet fs : outputVar.getTerms()){
+			String name = fs.getName();
+			double left;
+			double right;
+			if (name.equals("edge")){
+				left = fs.getFunc().getA();
+				right = fs.getFunc().getC();
+			}else {
+				left = fs.getFunc().getA();
+				right = fs.getFunc().getB();
+			}
+			
+			for(double i = left; i<=right; i++){
+				System.out.println(i);
+				checkPoints.add(i);
 			}
 		}
-		
-		this.numOfOutputVars = outputVars.size();
-		this.outputVals = new double[numOfOutputVars];
 	}
 	
 	public void setAggrType(AggregationType aggrType) {
@@ -54,39 +67,52 @@ public class Algorithm2 {
 
 	public void setAccumType(AccumulationType accumType) {
 		this.accumType = accumType;
+		union.setAccumulationType(accumType);
 	}
 	
-	public double[] run(List<Double> input) throws Exception {
-		UnionOfFuzzySet[] unions =new UnionOfFuzzySet[numOfOutputVars];
-		for(int i = 0; i< numOfOutputVars; i++){
-			unions[i] = new UnionOfFuzzySet(accumType);
-		}
+	public double run(double[] input){
+		union.clear();
 		
 		for (int i = 0; i < rules.length; i++) {
 			Operator op = rules[i].getConcO();
 			double aggrCond = (op == Operator.AND)?1:0;
 			for(Condition c : rules[i].getConditions()){
-				aggrCond = aggrType.getValue(aggrCond, c.getValue(input.get(c.getVar().getId())), op);
+				aggrCond = aggrType.getValue(aggrCond, c.getValue(input[c.getVar().getId()-1]), op);
 			}
 			
 			for (Conclusion c : rules[i].getConclusions()) {
-				unions[outputVars.indexOf(c.getVar())].addFuzzySet(new ActivatedFuzzySet(actType.getValue(c.getWeight(), aggrCond), c.getTerm()));
+				union.addFuzzySet(new ActivatedFuzzySet(actType.getValue(c.getWeight(), aggrCond), c.getTerm()));
 			}
 		}
 
-		for(int i = 0; i<numOfOutputVars; i++){
-			outputVals[i] = integral2(outputVars.get(i).getMin(), outputVars.get(i).getMax(), unions[i]);
+		return integral2(outputVar.getMin(), outputVar.getMax(), union);
+	}
+	
+	private double integral3(double min, double max, UnionOfFuzzySet u) {
+		double m = 0;
+		double k = 0;
+		for (double i : checkPoints) {
+				double temp = u.getValue(i);
+				if (temp > m){
+					m=temp;
+					k=i;
+				}
 		}
-		return outputVals;
+		return k;
 	}
 	
 	private double integral2(double min, double max, UnionOfFuzzySet u) {
 		double resultUp = 0;
 		double resultDown = 0;
-		for (double i = min; i <= max; i += 1) {
-				resultUp += i * u.getValue(i);
-				resultDown += u.getValue(i);
+		for (double i : checkPoints) {
+			double k = u.getValue(i);
+			resultUp += i * k;
+			resultDown += k;
 		}
 		return resultUp/resultDown;
+	}
+
+	public Variable getOutputVar() {
+		return outputVar;
 	}
 }

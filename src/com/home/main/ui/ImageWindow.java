@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.JProgressBar;
 import javax.swing.JLabel;
+import javax.swing.JCheckBoxMenuItem;
 
 public class ImageWindow extends JFrame {
 
@@ -60,6 +61,7 @@ public class ImageWindow extends JFrame {
 	private MonochromeEdgeDetection monoEdgeDet;
 	private JProgressBar progressBar;
 	private JLabel status;
+	private JCheckBoxMenuItem chckbxmntmNoizeRemoving;
 
 	/**
 	 * Create the frame.
@@ -132,6 +134,13 @@ public class ImageWindow extends JFrame {
 		buttonGroup.add(rdbtnmntmColor);
 		mnAlgorithm.add(rdbtnmntmColor);
 		
+		JMenu mnFiltering = new JMenu("Filtering");
+		menuBar.add(mnFiltering);
+		
+		chckbxmntmNoizeRemoving = new JCheckBoxMenuItem("Noize removing");
+		chckbxmntmNoizeRemoving.setSelected(true);
+		mnFiltering.add(chckbxmntmNoizeRemoving);
+		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
@@ -157,6 +166,7 @@ public class ImageWindow extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				monoEdgeDet.setImage(originImage);
+				monoEdgeDet.isRemoveNoize(chckbxmntmNoizeRemoving.isSelected());
 				Thread t  = new Thread(monoEdgeDet);
 				t.start();
 			}

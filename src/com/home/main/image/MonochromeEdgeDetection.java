@@ -34,9 +34,12 @@ public class MonochromeEdgeDetection implements Runnable {
 	private Graphics2D g;
 	private List<Pixel> pixelToDraw;
 	private JLabel status;
+	private Variable v ;
+	private boolean isRemoveNoize = true;
 
 	public MonochromeEdgeDetection(Algorithm2 fuzzyLogic) {
 		this.fuzzyLogic = fuzzyLogic;
+		v = fuzzyLogic.getOutputVar();
 	}
 
 	public void setImage(BufferedImage originImage) {
@@ -130,7 +133,10 @@ public class MonochromeEdgeDetection implements Runnable {
 		
 		detectEdges();
 		
-		removeNoise();
+		if (isRemoveNoize){
+			removeNoise();
+		}
+		
 		updateStatus("Done!");
 		Thread.currentThread().interrupt();
 	}
@@ -150,23 +156,14 @@ public class MonochromeEdgeDetection implements Runnable {
 				int p3 = Color.decode(Integer.toString(pixels[i][j + 1])).getBlue();
 				int p4 = Color.decode(Integer.toString(pixels[i + 1][j + 1])).getBlue();
 
-				ArrayList<Double> inputVals = new ArrayList<Double>(5);
-				inputVals.add(0, 0.);
-				inputVals.add(1, (double)p1);
-				inputVals.add(2, (double)p2);
-				inputVals.add(3, (double)p3);
-				inputVals.add(4, (double)p4);
+				double[] inputVals = new double[4];
+				inputVals[0] = (double)p1;
+				inputVals[1] = (double)p2;
+				inputVals[2] = (double)p3;
+				inputVals[3] = (double)p4;
 
-				double[] outputVals;
-				try {
-					outputVals = fuzzyLogic.run(inputVals);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				/*
-				Variable v = fuzzyLogic.getRuleBase().getOutputVars().iterator().next();
-				Double value = outputVals.get(v.getId());
-				FuzzySet term = v.getTermByValue(value);
+				double outputVal = fuzzyLogic.run(inputVals);
+				FuzzySet term = v.getTermByValue(outputVal);
 
 				if (term != null){
 					if (term.getName().equals("edge")) {
@@ -175,12 +172,12 @@ public class MonochromeEdgeDetection implements Runnable {
 						g.drawRect(j + 1, i, 0, 0);
 						g.drawRect(j + 1, i + 1, 0, 0);
 					}
-				}*/
+				}
 				
 				k++;
 				updateProgress(k);
 			}
-			//updateView();
+			updateView();
 		}
 		
 		long end = System.currentTimeMillis();
@@ -218,7 +215,7 @@ public class MonochromeEdgeDetection implements Runnable {
 		}
 
 		panel.addPixels(toDraw);
-		panel.repaint();
+		panel.clearPixels();
 		long end = System.currentTimeMillis();
 		System.out.println("Noize loop: "+(end-start));
 	}
@@ -264,5 +261,10 @@ public class MonochromeEdgeDetection implements Runnable {
 				return false;
 			return true;
 		}
+	}
+
+
+	public void isRemoveNoize(boolean selected) {
+		isRemoveNoize = selected;
 	}
 }

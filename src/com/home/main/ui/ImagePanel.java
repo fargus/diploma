@@ -53,6 +53,7 @@ public class ImagePanel extends JPanel {
 	    long e = System.currentTimeMillis();
 	    System.out.println("Generating image: "+(e-s));
 	    export = false;
+	    setImage(bi);
 	    return bi;
 	}
 	
@@ -62,6 +63,7 @@ public class ImagePanel extends JPanel {
 	
 	public void addPixels(Collection<Pixel> p){
 		pixelToDraw.addAll(p);
+		setImage(getImage());
 	}
 	
 	public void clearPixels(){

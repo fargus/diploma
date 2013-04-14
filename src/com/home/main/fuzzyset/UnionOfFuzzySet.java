@@ -62,4 +62,8 @@ public class UnionOfFuzzySet implements FuzzySet {
 	public Func getFunc() {
 		return null;
 	}
+	
+	public void clear(){
+		sets.clear();
+	}
 }
