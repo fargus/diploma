@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,9 +33,9 @@ public class FuzzySetDO implements Serializable {
 	private Integer id;
 	@Column(nullable = false)
 	private String name;
-	@ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-	@JoinColumn(name = "variable_id")
-	private VariableDO variable;
+	@ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@JoinTable(name = "termvar", joinColumns = @JoinColumn(name = "fuzzyset_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "variable_id", referencedColumnName = "ID"))
+	private Set<VariableDO> variable;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "func_id")
 	private FuncDO func;
@@ -43,7 +45,7 @@ public class FuzzySetDO implements Serializable {
 	public FuzzySetDO(){
 	}
 
-	public FuzzySetDO(Integer id, String name, VariableDO variable, FuncDO func,
+	public FuzzySetDO(Integer id, String name, Set<VariableDO> variable, FuncDO func,
 			Set<StatementDO> statement) {
 		this.id = id;
 		this.name = name;
@@ -60,7 +62,7 @@ public class FuzzySetDO implements Serializable {
 		return name;
 	}
 
-	public VariableDO getVariable() {
+	public Set<VariableDO> getVariable() {
 		return variable;
 	}
 
@@ -80,7 +82,7 @@ public class FuzzySetDO implements Serializable {
 		this.name = name;
 	}
 
-	public void setVariable(VariableDO variable) {
+	public void setVariable(Set<VariableDO> variable) {
 		this.variable = variable;
 	}
 
@@ -90,6 +92,10 @@ public class FuzzySetDO implements Serializable {
 
 	public void setStatement(Set<StatementDO> statement) {
 		this.statement = statement;
+	}
+	
+	public void addVariable(VariableDO v){
+		variable.add(v);
 	}
 	
 	public FuzzySet getDTO(){

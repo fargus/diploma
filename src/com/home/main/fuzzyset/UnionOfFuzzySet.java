@@ -15,6 +15,11 @@ public class UnionOfFuzzySet implements FuzzySet {
 	public UnionOfFuzzySet(){
 		sets = new ArrayList<FuzzySet>();
 	}
+	
+	public UnionOfFuzzySet(AccumulationType accType){
+		sets = new ArrayList<FuzzySet>();
+		this.accType = accType;
+	}
 
 	@Override
 	public String getName() {

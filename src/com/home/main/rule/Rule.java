@@ -124,9 +124,13 @@ public class Rule{
 		Set<StatementDO> conds = new HashSet<StatementDO>();
 		Set<StatementDO> concs = new HashSet<StatementDO>();
 		for (Condition c : getConditions()){
-			conds.add(c.getSDO());
+			StatementDO s = c.getSDO();
+			s.addExpression(cond);
+			conds.add(s);
 		}
 		for (Conclusion c : getConclusions()){
+			StatementDO s = c.getSDO();
+			s.addExpression(conc);
 			concs.add(c.getSDO());
 		}
 		

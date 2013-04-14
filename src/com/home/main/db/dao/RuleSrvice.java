@@ -30,6 +30,17 @@ public interface RuleSrvice {
 	public void createConclusion(Conclusion conc);
 	public void createRule(Rule rule);
 	
-	
+	public void updateFunc(Func func);
+	public void updateFuzzySet(FuzzySet fs);
+	public void updateVariable(Variable v);
+	public void updateCondition(Condition cond);
+	public void updateConclusion(Conclusion conc);
+	public void updateRule(Rule rule);
 
+	public void deleteFunc(Func func);
+	public void deleteFuzzySet(FuzzySet fs);
+	public void deleteVariable(Variable v);
+	public void deleteCondition(Condition cond);
+	public void deleteConclusion(Conclusion conc);
+	public void deleteRule(Rule rule);
 }

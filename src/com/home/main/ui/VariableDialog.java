@@ -63,6 +63,7 @@ public class VariableDialog extends JDialog implements ChangeListener{
 	private double maxVal = 100;
 	private Set<FuzzySet> termsVal = new HashSet<FuzzySet>();
 	private Variable var;
+	private Integer id;
 	
 	private Collection<FuzzySet> terms;
 	private boolean isNew = true;
@@ -98,6 +99,7 @@ public class VariableDialog extends JDialog implements ChangeListener{
 		this.maxVal = var.getMax();
 		this.termsVal.addAll(var.getTerms());
 		isNew = false;
+		this.id = var.getId();
 		initUI();
 		setTitle("Edit Variable");
 	}
@@ -239,11 +241,12 @@ public class VariableDialog extends JDialog implements ChangeListener{
 						if (isNew){
 							var = new Variable(nameVal, termsVal, minVal, maxVal);
 							rs.createVariable(var);
-							main.variables.put(var.getId(), var);
-							main.updateView();
 						}else{
-							
+							var = new Variable(id, nameVal, termsVal, minVal, maxVal);
+							rs.updateVariable(var);
 						}
+						main.variables.put(var.getId(), var);
+						main.updateView();
 						dispose();
 					}
 				});

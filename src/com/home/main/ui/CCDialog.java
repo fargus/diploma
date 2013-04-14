@@ -191,7 +191,16 @@ public class CCDialog extends JDialog {
 								main.conditions.put(c.getId(), c);
 							}
 						}else{
-							
+							if (chckbxConclusion.isSelected()){
+								Conclusion c = new Conclusion(id, (FuzzySet) rightList.getSelectedValue(), selectedVar);
+								c.setWeight((Double)spinner.getValue());
+								rs.updateConclusion(c);
+								main.conclusions.put(c.getId(), c);
+							}else{
+								Condition c = new Condition(id, (FuzzySet) rightList.getSelectedValue(), selectedVar);
+								rs.updateCondition(c);
+								main.conditions.put(c.getId(), c);
+							}
 						}
 						main.updateView();
 						dispose();

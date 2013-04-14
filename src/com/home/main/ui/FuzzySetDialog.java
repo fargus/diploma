@@ -32,6 +32,7 @@ public class FuzzySetDialog extends JDialog {
 	private RuleSrvice rs;
 	private MainWindow main;
 	private boolean isNew = true;
+	private Integer id;
 	
 	private static final long serialVersionUID = -1702962787244205125L;
 	private final JPanel contentPanel = new JPanel();
@@ -68,6 +69,7 @@ public class FuzzySetDialog extends JDialog {
 		this.main=main;
 		this.rs=rs;
 		this.fs=fs;
+		this.id = fs.getId();
 		initUI();
 		setTitle("Edit FuzzySet");
 	}
@@ -108,6 +110,7 @@ public class FuzzySetDialog extends JDialog {
 					}
 				}else{
 					comboBox.setSelectedItem(fs.getFunc());
+					plot.drawFunction(fs.getFunc());
 					textField.setText(fs.getName());
 				}
 				verticalBox.add(comboBox);
@@ -125,20 +128,20 @@ public class FuzzySetDialog extends JDialog {
 				JButton okButton = new JButton((isNew)?"Create":"Save");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						String name = textField.getText();
+						if (name == null || name.isEmpty()){
+							JOptionPane.showMessageDialog(main, "FuzzySet name null or empty!", "Error", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						if(isNew){
-							String name = textField.getText();
-							if (name == null || name.isEmpty()){
-								JOptionPane.showMessageDialog(main, "FuzzySet name null or empty!", "Error", JOptionPane.ERROR_MESSAGE);
-								return;
-							}
 							fs = new FuzzySetImpl(name, (Func)comboBox.getSelectedItem());
 							rs.createFuzzySet(fs);
-							main.terms.put(fs.getId(), fs);
-							main.updateView();
-							
 						}else{
-							
+							fs = new FuzzySetImpl(id, name, (Func)comboBox.getSelectedItem());
+							rs.updateFuzzySet(fs);
 						}
+						main.terms.put(fs.getId(), fs);
+						main.updateView();
 						dispose();
 					}
 				});

@@ -40,6 +40,7 @@ import javax.swing.event.ListSelectionListener;
 import com.home.main.algorithm.AccumulationType;
 import com.home.main.algorithm.AggregationType;
 import com.home.main.algorithm.Algorithm;
+import com.home.main.algorithm.Algorithm2;
 import com.home.main.algorithm.ImplicationType;
 import com.home.main.db.dao.RuleServiceImpl;
 import com.home.main.db.dao.RuleSrvice;
@@ -81,7 +82,7 @@ public class MainWindow extends JFrame {
 
 	public RuleBase rb;
 	private RuleSrvice rs = new RuleServiceImpl();
-	private Algorithm alg = new Algorithm();
+	private Algorithm2 alg = new Algorithm2();
 	private Map<Integer, Double> inputVal = new HashMap<Integer, Double>();
 	private Map<Integer, Double> result = new HashMap<Integer, Double>();
 
@@ -162,6 +163,8 @@ public class MainWindow extends JFrame {
 	private JButton btnCreate;
 	private JButton btnEdit;
 	private JButton btnDelete;
+	private JMenu mnTask;
+	private JMenuItem mntmEdgeDetection;
 
 	public MainWindow() {
 		initUI();
@@ -206,6 +209,22 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnFile.add(exitItem);
+		
+		mnTask = new JMenu("Task");
+		menuBar.add(mnTask);
+		
+		mntmEdgeDetection = new JMenuItem("Edge Detection");
+		mntmEdgeDetection.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				alg.setRules(rb.getRules());
+				alg.setAccumType((AccumulationType) comboBox_2.getSelectedItem());
+				alg.setActType((ImplicationType) comboBox_3.getSelectedItem());
+				alg.setAggrType((AggregationType) comboBox_1.getSelectedItem());
+				ImageWindow frame = new ImageWindow(alg);
+				frame.setVisible(true);
+			}
+		});
+		mnTask.add(mntmEdgeDetection);
 	}
 
 	private void initControlPane() {
@@ -280,6 +299,11 @@ public class MainWindow extends JFrame {
 		btnEdit = new JButton("Edit");
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Rule r = (Rule)list.getSelectedValue();
+				if (r == null){
+					JOptionPane.showMessageDialog(frame, "Choose rule to edit!", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				RuleDialog dialog = new RuleDialog(frame, rs, (Rule)list.getSelectedValue());
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
@@ -328,16 +352,16 @@ public class MainWindow extends JFrame {
 				horizontalBox.add(btnStart);
 				btnStart.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						alg.setRuleBase(rb);
+						alg.setRules(rb.getRules());
 						alg.setAccumType((AccumulationType) comboBox_2.getSelectedItem());
 						alg.setActType((ImplicationType) comboBox_3.getSelectedItem());
 						alg.setAggrType((AggregationType) comboBox_1.getSelectedItem());
-						try {
-							alg.run(inputVal);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-						result = alg.getLastResult();
+//						try {
+//							alg.run(inputVal);
+//						} catch (Exception e1) {
+//							e1.printStackTrace();
+//						}
+//						result = alg.getLastResult();
 						showResult();
 					}
 				});
@@ -499,8 +523,11 @@ public class MainWindow extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
 					varPlot.clear();
-					for (FuzzySet f : ((Variable) variableList.getSelectedValue()).getTerms()) {
-						varPlot.addFunction(f.getFunc());
+					Variable v = ((Variable) variableList.getSelectedValue());
+					if (v !=null){
+						for (FuzzySet f : v.getTerms()) {
+							varPlot.addFunction(f.getFunc());
+						}
 					}
 				}
 			}
@@ -587,9 +614,9 @@ public class MainWindow extends JFrame {
 				}else{
 					CCDialog dialog;
 					if (obj instanceof Condition) {
-						dialog = new CCDialog(null, new RuleServiceImpl(), (Condition) obj);
+						dialog = new CCDialog(frame, new RuleServiceImpl(), (Condition) obj);
 					} else {
-						dialog = new CCDialog(null, new RuleServiceImpl(), (Conclusion) obj);
+						dialog = new CCDialog(frame, new RuleServiceImpl(), (Conclusion) obj);
 					}
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);

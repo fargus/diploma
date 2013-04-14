@@ -50,6 +50,7 @@ public class FuncDialog extends JDialog implements ChangeListener, ItemListener 
 	private RuleSrvice rs;
 	private Func func = FuncUtil.createFunc(1., 2., FuncType.LINEUP);
 	private boolean isNew = true;
+	private Integer id;
 	
 	private JSpinner aSpin;
 	private JSpinner bSpin;
@@ -69,6 +70,7 @@ public class FuncDialog extends JDialog implements ChangeListener, ItemListener 
 	 */
 	public FuncDialog(MainWindow main, RuleSrvice rs, Func func){
 		this.func = func;
+		this.id = func.getId();
 		this.isNew = false;
 		this.rs = rs;
 		this.main=main;
@@ -172,11 +174,12 @@ public class FuncDialog extends JDialog implements ChangeListener, ItemListener 
 					public void actionPerformed(ActionEvent arg0) {
 						if (isNew){
 							rs.createFunc(func);
-							main.functions.put(func.getId(), func);
-							main.updateView();
 						}else{
-							
+							func.setId(id);
+							rs.updateFunc(func);
 						}
+						main.functions.put(func.getId(), func);
+						main.updateView();
 						dispose();
 					}
 				});

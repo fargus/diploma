@@ -25,6 +25,10 @@ public class Algorithm {
 	private AggregationType aggrType;
 	private ImplicationType actType;
 	private AccumulationType accumType;
+	
+	public RuleBase getRuleBase(){
+		return rb;
+	}
 
 	public void setAggrType(AggregationType aggrType) {
 		this.aggrType = aggrType;
@@ -39,16 +43,16 @@ public class Algorithm {
 	}
 
 	public Map<Integer, Double> run(Map<Integer, Double> input) throws Exception {
-		log.info("Algorithm start >>>");
+		//log.info("Algorithm start >>>");
 		for (int i : input.keySet()) {
-			log.debug("Input value: Variable:[" + i + "] Value:[" + input.get(i) + "]");
+			log.debug("Input value: Variable:[" + i + "] Value:[" + input.get(i) + "] Term:["+((input.get(i)>133)?"white":"black")+"]");
 		}
 		inputVals = input;
 		outputVals = defuzzification(accumulation(activation(aggregation(fuzzyfication(inputVals)))));
 		for (int i : outputVals.keySet()) {
 			log.debug("Output value: Variable:[" + i + "] Value:[" + outputVals.get(i) + "]");
 		}
-		log.info("Algorithm stop <<<");
+		//log.info("Algorithm stop <<<");
 
 		return outputVals;
 	}
@@ -109,25 +113,27 @@ public class Algorithm {
 		return result;
 	}
 
-	private Map<Integer, ActivatedFuzzySet> activation(Map<Integer, Double> inputVal) {
+	private Map<Integer, Map<Integer, ActivatedFuzzySet>> activation(Map<Integer, Double> inputVal) {
 		log.trace("Activation start!");
-		Map<Integer, ActivatedFuzzySet> result = new HashMap<Integer, ActivatedFuzzySet>();
+		Map<Integer, Map<Integer, ActivatedFuzzySet>> result = new HashMap<Integer, Map<Integer, ActivatedFuzzySet>>();
 		for (Rule r : rb.getRules()) {
+			Map<Integer, ActivatedFuzzySet> resultC = new HashMap<Integer, ActivatedFuzzySet>();
 			for (Conclusion c : r.getConclusions()) {
 				double temp = actType.getValue(c.getWeight(), inputVal.get(r.getId()));
-				result.put(c.getId(), new ActivatedFuzzySet(temp, c.getTerm())); // can
+				resultC.put(c.getId(), new ActivatedFuzzySet(temp, c.getTerm())); // can
 																					// be
 																					// changed
 				log.trace("Rule #" + r.getId() + " Conclusion:[" + c.getId() + "] Conclusion weight:[" + c.getWeight() + "] Input value:["
 						+ inputVal.get(r.getId()) + "] Truth degree:[" + temp + "]");
 			}
+			result.put(r.getId(), resultC);
 		}
 
 		log.trace("Activation complite!");
 		return result;
 	}
 
-	private Map<Integer, UnionOfFuzzySet> accumulation(Map<Integer, ActivatedFuzzySet> inputVal) {
+	private Map<Integer, UnionOfFuzzySet> accumulation(Map<Integer, Map<Integer, ActivatedFuzzySet>> inputVal) {
 		log.trace("Accumulation start!");
 		Map<Integer, UnionOfFuzzySet> unions = new HashMap<Integer, UnionOfFuzzySet>();
 		for (Rule r : rb.getRules()) {
@@ -138,8 +144,8 @@ public class Algorithm {
 					u.setAccumulationType(accumType);
 					unions.put(c.getVar().getId(), u);
 				}
-				u.addFuzzySet(inputVal.get(c.getId()));
-				log.trace("Rule #" + r.getId() + " Variable:[" + c.getVar().getId() + "] Activated term added to union:[" + inputVal.get(c.getId()).getId()
+				u.addFuzzySet(inputVal.get(r.getId()).get(c.getId()));
+				log.trace("Rule #" + r.getId() + " Variable:[" + c.getVar().getId() + "] Activated term added to union:[" + inputVal.get(r.getId()).get(c.getId()).getId()
 						+ "]");
 			}
 		}
@@ -195,7 +201,7 @@ public class Algorithm {
 	private double integral2(double min, double max, UnionOfFuzzySet u, boolean isUp) {
 		log.trace("Integral start!");
 
-		for (double i = min; i <= max; i += (max - min) / 20) {
+		for (double i = min; i <= max; i++) {
 			log.trace("Union value:[" + i + "]-[" + u.getValue(i) + "]");
 		}
 

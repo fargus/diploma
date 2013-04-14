@@ -248,14 +248,14 @@ public class RuleDialog extends JDialog {
 							JOptionPane.showMessageDialog(main, "Select condition and conclusion!", "Error", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
+						Rule r = new Rule(id, ruleCond, ruleConc);
 						if (isNew) {
-							Rule r = new Rule(id, ruleCond, ruleConc);
 							rs.createRule(r);
-							main.rb.addRule(r);
-							main.updateView();
 						} else {
-
+							rs.updateRule(r);
 						}
+						main.rb.addRule(r);
+						main.updateView();
 						dispose();
 					}
 				});

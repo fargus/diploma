@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.EntityExistsException;
 
+import com.home.main.db.entities.ExpressionDO;
 import com.home.main.db.entities.FuncDO;
 import com.home.main.db.entities.FuzzySetDO;
 import com.home.main.db.entities.RuleDO;
@@ -169,11 +170,6 @@ public class RuleServiceImpl implements RuleSrvice {
 			checkFuzzySet(sdo.getFuzzyset());
 		}
 		
-		VariableDO var = sdo.getVariable();
-		FuzzySetDO fs = sdo.getFuzzyset();
-		System.out.println("Var id = "+var.getId());
-		System.out.println("Term id = "+ fs.getId());
-
 	}
 
 	@Override
@@ -246,6 +242,95 @@ public class RuleServiceImpl implements RuleSrvice {
 			result.put(r.getId(), r.getDTO());
 		}
 		return result;
+	}
+
+	@Override
+	public void updateFunc(Func func) {
+		FuncDO f = dao.findById(FuncDO.class, func.getId());
+		f.setA(func.getA());
+		f.setB(func.getB());
+		f.setC(func.getC());
+		f.setD(func.getD());
+		f.setType(func.getType().getTypeCode());
+		dao.update(f);
+	}
+
+	@Override
+	public void updateFuzzySet(FuzzySet fs) {
+		FuzzySetDO f = dao.findById(FuzzySetDO.class, fs.getId());
+		f.setName(fs.getName());
+		f.setFunc(fs.getFunc().getDO());
+		dao.update(f);
+	}
+
+	@Override
+	public void updateVariable(Variable v) {
+		VariableDO var = dao.findById(VariableDO.class, v.getId());
+		var.setMin(v.getMin());
+		var.setMax(v.getMax());
+		var.setName(v.getName());
+		var.setTerms(v.getDO().getTerms());
+		var.setMod(v.getDO().getMod());
+		dao.update(var);
+	}
+
+	@Override
+	public void updateCondition(Condition cond) {
+		StatementDO c = dao.findById(StatementDO.class, cond.getId());
+		c.setVariable(cond.getVar().getDO());
+		c.setFuzzyset(cond.getTerm().getDO());
+		dao.update(c);
+	}
+
+	@Override
+	public void updateConclusion(Conclusion conc) {
+		StatementDO c = dao.findById(StatementDO.class, conc.getId());
+		c.setVariable(conc.getVar().getDO());
+		c.setFuzzyset(conc.getTerm().getDO());
+		c.setWeight(conc.getWeight());
+		dao.update(c);
+	}
+
+	@Override
+	public void updateRule(Rule rule) {
+		RuleDO r = dao.findById(RuleDO.class, rule.getId());
+		ExpressionDO cond = rule.getDO().getCond();
+		cond.setId(r.getCond().getId());
+		ExpressionDO conc = rule.getDO().getConc();
+		conc.setId(r.getConc().getId());
+		r.setCond(cond);
+		r.setConc(conc);
+		dao.update(r);
+	}
+
+	@Override
+	public void deleteFunc(Func func) {
+		dao.delete(FuncDO.class, func.getId());
+	}
+
+	@Override
+	public void deleteFuzzySet(FuzzySet fs) {
+		dao.delete(FuzzySetDO.class, fs.getId());
+	}
+
+	@Override
+	public void deleteVariable(Variable v) {
+		dao.delete(VariableDO.class, v.getId());
+	}
+
+	@Override
+	public void deleteCondition(Condition cond) {
+		dao.delete(StatementDO.class, cond.getId());
+	}
+
+	@Override
+	public void deleteConclusion(Conclusion conc) {
+		dao.delete(StatementDO.class, conc.getId());
+	}
+
+	@Override
+	public void deleteRule(Rule rule) {
+		dao.delete(RuleDO.class, rule.getId());
 	}
 
 }

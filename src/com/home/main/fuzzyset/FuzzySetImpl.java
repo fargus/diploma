@@ -1,6 +1,10 @@
 package com.home.main.fuzzyset;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.home.main.db.entities.FuzzySetDO;
+import com.home.main.db.entities.VariableDO;
 import com.home.main.func.Func;
 
 public class FuzzySetImpl implements FuzzySet {
@@ -37,7 +41,8 @@ public class FuzzySetImpl implements FuzzySet {
 	}
 	
 	public FuzzySetDO getDO(){
-		return new FuzzySetDO(id, name, null, func.getDO(), null);
+		Set<VariableDO> var = new HashSet<VariableDO>();
+		return new FuzzySetDO(id, name, var, func.getDO(), null);
 	}
 
 	@Override

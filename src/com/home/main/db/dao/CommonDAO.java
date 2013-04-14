@@ -11,4 +11,7 @@ public interface CommonDAO {
 	
 	<ENTITY extends Serializable> Collection<ENTITY> findAll(Class<ENTITY> clazz);
 
+	<ENTITY extends Serializable> ENTITY update(ENTITY entity);
+	
+	<ENTITY extends Serializable> void delete(Class<ENTITY> clazz, Serializable id);
 }

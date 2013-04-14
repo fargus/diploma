@@ -7,8 +7,10 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,7 +36,7 @@ public class VariableDO implements Serializable {
 	private double min;
 	@Column(nullable = false)
 	private double max;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "variable")
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "variable")
 	private Set<FuzzySetDO> terms;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "variable")
 	private Set<StatementDO> statement;
@@ -102,7 +104,7 @@ public class VariableDO implements Serializable {
 	public void setTerms(Set<FuzzySetDO> terms) {
 		this.terms = terms;
 		for (FuzzySetDO fs : this.terms){
-			fs.setVariable(this);
+			fs.addVariable(this);
 		}
 	}
 

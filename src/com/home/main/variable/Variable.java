@@ -41,7 +41,11 @@ public class Variable {
 	}
 	
 	public Variable(String name, Set<FuzzySet> terms, double min, double max) {
-		this(null, name, terms, min, max, null);
+		this(null, name, terms, min, max);
+	}
+	
+	public Variable(Integer id, String name, Set<FuzzySet> terms, double min, double max) {
+		this(id, name, terms, min, max, null);
 		setModyficator(new HashSet<Modificator>());
 	}
 	
@@ -108,6 +112,19 @@ public class Variable {
 			}
 		}
 		return null;
+	}
+	
+	public FuzzySet getTermByValue(Double v){
+		FuzzySet maxTerm = null;
+		Double max = 0.;
+		for(FuzzySet fs : this.getTerms()){
+			Double temp = fs.getValue(v);
+			if (temp > max){
+				max = temp;
+				maxTerm = fs;
+			}
+		}
+		return maxTerm;
 	}
 
 	public VariableDO getDO(){

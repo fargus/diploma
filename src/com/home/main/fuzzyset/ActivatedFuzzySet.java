@@ -46,5 +46,9 @@ public class ActivatedFuzzySet implements FuzzySet{
 	public Func getFunc() {
 		return fuzzySet.getFunc();
 	}
+	
+	public String toString(){
+		return fuzzySet.toString()+" "+ truthDegree;
+	}
 
 }

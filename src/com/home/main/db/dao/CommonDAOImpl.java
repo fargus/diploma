@@ -36,4 +36,21 @@ public class CommonDAOImpl implements CommonDAO {
 	    return (Collection<ENTITY>) query.getResultList();
 	}
 
+	@Override
+	public <ENTITY extends Serializable> ENTITY update(ENTITY entity) {
+		em.getTransaction().begin();
+		em.merge(entity);
+		em.flush();
+		em.getTransaction().commit();
+		return entity;
+	}
+
+	@Override
+	public <ENTITY extends Serializable> void delete(Class<ENTITY> clazz, Serializable id) {
+		ENTITY entity = em.getReference(clazz, id);
+		em.getTransaction().begin();
+		em.remove(entity);
+		em.getTransaction().commit();
+	}
+	
 }
