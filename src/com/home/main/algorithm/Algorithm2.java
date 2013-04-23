@@ -30,14 +30,15 @@ public class Algorithm2 {
 	private AccumulationType accumType;
 	
 	private List<Double> checkPoints = new ArrayList<Double>();
-	
+	private double[] cp;
+
 	private UnionOfFuzzySet union =new UnionOfFuzzySet();
 	
 	public void setRules(Collection<Rule> rules){
 		this.rules = rules.toArray(new Rule[rules.size()]);
 		this.outputVar = rules.iterator().next().getConclusions().iterator().next().getVar();
 		this.numOfOutputVars = 1;
-		
+
 		for(FuzzySet fs : outputVar.getTerms()){
 			String name = fs.getName();
 			double left;
@@ -54,6 +55,12 @@ public class Algorithm2 {
 				System.out.println(i);
 				checkPoints.add(i);
 			}
+		}
+		cp = new double[checkPoints.size()];
+		int k = 0;
+		for (double i : checkPoints){
+			cp[k] = i;
+			k++;
 		}
 	}
 	
@@ -104,9 +111,9 @@ public class Algorithm2 {
 	private double integral2(double min, double max, UnionOfFuzzySet u) {
 		double resultUp = 0;
 		double resultDown = 0;
-		for (double i : checkPoints) {
-			double k = u.getValue(i);
-			resultUp += i * k;
+		for (int i = 0; i<cp.length; i++) {
+			double k = u.getValue(cp[i]);
+			resultUp += cp[i] * k;
 			resultDown += k;
 		}
 		return resultUp/resultDown;
