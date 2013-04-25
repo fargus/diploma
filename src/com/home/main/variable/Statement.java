@@ -88,10 +88,15 @@ public class Statement implements FuzzySet {
 		if (id != null){
 			sb.append("ID=["+id+"] ");
 		}
+		/*
 		sb.append("Variable=["+var.getId()+":"+var.getName()+"]");
 		sb.append(" IS ");
 		sb.append("Mod=["+((mod != null)?mod.getName():"")+"] ");
 		sb.append("Term=["+term.getId()+":"+term.getName()+"]");
+		*/
+		sb.append(var.getName());
+		sb.append(" IS ");
+		sb.append(term.getName());
 		return sb.toString();
 	}
 

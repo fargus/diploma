@@ -10,7 +10,7 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import com.home.main.image.MonochromeEdgeDetection.Pixel;
+import com.home.main.image.AbstractEdgeDetection.Pixel;
 
 public class ImagePanel extends JPanel {
 

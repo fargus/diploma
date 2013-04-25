@@ -10,7 +10,7 @@ public class LineDownFunc extends AbstractFunc {
 	
 	@Override
 	public double getValue(double x) {
-		if (x<=1){
+		if (x<=a){
 			return 1;
 		}else if(x>=b){
 			return 0;

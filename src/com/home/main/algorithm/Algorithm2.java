@@ -39,29 +39,30 @@ public class Algorithm2 {
 		this.outputVar = rules.iterator().next().getConclusions().iterator().next().getVar();
 		this.numOfOutputVars = 1;
 
-		for(FuzzySet fs : outputVar.getTerms()){
-			String name = fs.getName();
-			double left;
-			double right;
-			if (name.equals("edge")){
-				left = fs.getFunc().getA();
-				right = fs.getFunc().getC();
-			}else {
-				left = fs.getFunc().getA();
-				right = fs.getFunc().getB();
-			}
-			
-			for(double i = left; i<=right; i++){
-				System.out.println(i);
-				checkPoints.add(i);
-			}
-		}
-		cp = new double[checkPoints.size()];
-		int k = 0;
-		for (double i : checkPoints){
-			cp[k] = i;
-			k++;
-		}
+//		for(FuzzySet fs : outputVar.getTerms()){
+//			String name = fs.getName();
+//			double left;
+//			double right;
+//			if (name.equals("edge")){
+//				left = fs.getFunc().getA();
+//				right = fs.getFunc().getC();
+//			}else {
+//				left = fs.getFunc().getA();
+//				right = fs.getFunc().getB();
+//			}
+//			
+//			for(double i = left; i<=right; i++){
+//				System.out.println(i);
+//				checkPoints.add(i);
+//			}
+//		}
+//		cp = new double[checkPoints.size()];
+//		int k = 0;
+//		for (double i : checkPoints){
+//			cp[k] = i;
+//			k++;
+//		}
+		cp = new double[]{0, 0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1};
 	}
 	
 	public void setAggrType(AggregationType aggrType) {

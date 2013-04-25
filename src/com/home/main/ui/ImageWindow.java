@@ -23,6 +23,7 @@ import javax.swing.ButtonGroup;
 
 import com.home.main.algorithm.Algorithm;
 import com.home.main.algorithm.Algorithm2;
+import com.home.main.image.ColorEdgeDetection;
 import com.home.main.image.MonochromeEdgeDetection;
 
 import java.awt.event.ActionListener;
@@ -59,6 +60,7 @@ public class ImageWindow extends JFrame {
 	private BufferedImage originImage;
 	private BufferedImage resultImage;
 	private MonochromeEdgeDetection monoEdgeDet;
+	private ColorEdgeDetection colorEdgeDet;
 	private JProgressBar progressBar;
 	private JLabel status;
 	private JCheckBoxMenuItem chckbxmntmNoizeRemoving;
@@ -68,10 +70,15 @@ public class ImageWindow extends JFrame {
 	 */
 	public ImageWindow(Algorithm2 fuzzyLogic) {
 		monoEdgeDet = new MonochromeEdgeDetection(fuzzyLogic);
+		colorEdgeDet = new ColorEdgeDetection(fuzzyLogic);
 		initUI();
 		monoEdgeDet.setProgressBar(progressBar);
 		monoEdgeDet.setImagePanel(rightImagePane);
 		monoEdgeDet.setLable(status);
+
+		colorEdgeDet.setProgressBar(progressBar);
+		colorEdgeDet.setImagePanel(rightImagePane);
+		colorEdgeDet.setLable(status);
 	}
 	
 	private void initUI(){
@@ -130,7 +137,7 @@ public class ImageWindow extends JFrame {
 		buttonGroup.add(rdbtnmntmMonochrome);
 		mnAlgorithm.add(rdbtnmntmMonochrome);
 		
-		JRadioButtonMenuItem rdbtnmntmColor = new JRadioButtonMenuItem("Color");
+		final JRadioButtonMenuItem rdbtnmntmColor = new JRadioButtonMenuItem("Color");
 		buttonGroup.add(rdbtnmntmColor);
 		mnAlgorithm.add(rdbtnmntmColor);
 		
@@ -165,10 +172,17 @@ public class ImageWindow extends JFrame {
 		JButton btnNewButton = new JButton("Start");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				monoEdgeDet.setImage(originImage);
-				monoEdgeDet.isRemoveNoize(chckbxmntmNoizeRemoving.isSelected());
-				Thread t  = new Thread(monoEdgeDet);
-				t.start();
+				if (rdbtnmntmColor.isSelected()){
+					colorEdgeDet.setImage(originImage);
+					colorEdgeDet.isRemoveNoize(chckbxmntmNoizeRemoving.isSelected());
+					Thread t  = new Thread(colorEdgeDet);
+					t.start();
+				}else{
+					monoEdgeDet.setImage(originImage);
+					monoEdgeDet.isRemoveNoize(chckbxmntmNoizeRemoving.isSelected());
+					Thread t  = new Thread(monoEdgeDet);
+					t.start();
+				}
 			}
 		});
 		

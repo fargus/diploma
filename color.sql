@@ -26,7 +26,7 @@ CREATE TABLE `expression` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `op` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +35,6 @@ CREATE TABLE `expression` (
 
 LOCK TABLES `expression` WRITE;
 /*!40000 ALTER TABLE `expression` DISABLE KEYS */;
-INSERT INTO `expression` VALUES (1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(7,0),(8,0),(9,0),(10,0),(11,0),(12,0),(13,0),(14,0),(15,0),(16,0),(17,0),(18,0),(19,0),(20,0),(21,0),(22,0),(23,0),(24,0),(25,0),(26,0),(27,0),(28,0),(29,0),(30,0),(31,0),(32,0);
 /*!40000 ALTER TABLE `expression` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +62,6 @@ CREATE TABLE `exprstate` (
 
 LOCK TABLES `exprstate` WRITE;
 /*!40000 ALTER TABLE `exprstate` DISABLE KEYS */;
-INSERT INTO `exprstate` VALUES (1,2),(1,6),(1,8),(1,10),(1,12),(1,14),(1,16),(1,18),(2,4),(2,20),(2,22),(2,24),(2,26),(2,28),(2,30),(2,32),(3,2),(3,6),(3,8),(3,10),(3,20),(3,22),(3,24),(3,26),(4,4),(4,12),(4,14),(4,16),(4,18),(4,28),(4,30),(4,32),(5,2),(5,6),(5,12),(5,14),(5,20),(5,22),(5,28),(5,30),(6,4),(6,8),(6,10),(6,16),(6,18),(6,24),(6,26),(6,32),(7,2),(7,8),(7,12),(7,16),(7,20),(7,24),(7,28),(7,32),(8,4),(8,6),(8,10),(8,14),(8,18),(8,22),(8,26),(8,30),(9,3),(10,5),(10,7),(10,9),(10,11),(10,13),(10,15),(10,17),(10,19),(10,21),(10,23),(10,25),(10,27),(10,29),(10,31),(11,1);
 /*!40000 ALTER TABLE `exprstate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,7 +80,7 @@ CREATE TABLE `func` (
   `d` double DEFAULT NULL,
   `type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +89,7 @@ CREATE TABLE `func` (
 
 LOCK TABLES `func` WRITE;
 /*!40000 ALTER TABLE `func` DISABLE KEYS */;
-INSERT INTO `func` VALUES (1,0,255,NULL,NULL,7),(2,0,255,NULL,NULL,8),(3,0,5,NULL,NULL,8),(4,121,133,144.5,NULL,1),(5,250,255,NULL,NULL,7);
+INSERT INTO `func` VALUES (1,0,1,NULL,NULL,7),(2,0,1,NULL,NULL,8),(3,0,0.8,NULL,NULL,8),(4,0.2,1,NULL,NULL,7);
 /*!40000 ALTER TABLE `func` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -109,7 +107,7 @@ CREATE TABLE `fuzzyset` (
   PRIMARY KEY (`id`),
   KEY `FK681022183264D3D5` (`func_id`),
   CONSTRAINT `FK681022183264D3D5` FOREIGN KEY (`func_id`) REFERENCES `func` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,7 +116,7 @@ CREATE TABLE `fuzzyset` (
 
 LOCK TABLES `fuzzyset` WRITE;
 /*!40000 ALTER TABLE `fuzzyset` DISABLE KEYS */;
-INSERT INTO `fuzzyset` VALUES (1,'white',1),(2,'black',2),(3,'black',3),(4,'edge',4),(5,'white',5);
+INSERT INTO `fuzzyset` VALUES (1,'high',1),(2,'low',2),(3,'solid',3),(4,'edge',4);
 /*!40000 ALTER TABLE `fuzzyset` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,7 +162,7 @@ CREATE TABLE `rule` (
   KEY `FK3596FC7AEACD2C` (`conc_id`),
   CONSTRAINT `FK3596FC7AEACD2C` FOREIGN KEY (`conc_id`) REFERENCES `expression` (`id`),
   CONSTRAINT `FK3596FC7AEB418B` FOREIGN KEY (`cond_id`) REFERENCES `expression` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +171,6 @@ CREATE TABLE `rule` (
 
 LOCK TABLES `rule` WRITE;
 /*!40000 ALTER TABLE `rule` DISABLE KEYS */;
-INSERT INTO `rule` VALUES (1,1,2),(2,3,4),(3,5,6),(4,7,8),(5,9,10),(6,11,12),(7,13,14),(8,15,16),(9,17,18),(10,19,20),(11,21,22),(12,23,24),(13,25,26),(14,27,28),(15,29,30),(16,31,32);
 /*!40000 ALTER TABLE `rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,7 +194,7 @@ CREATE TABLE `statement` (
   CONSTRAINT `FK83B7296F1FC202D5` FOREIGN KEY (`variable_id`) REFERENCES `variable` (`id`),
   CONSTRAINT `FK83B7296F9ECD4915` FOREIGN KEY (`modificator_id`) REFERENCES `modificator` (`id`),
   CONSTRAINT `FK83B7296FBCBA2635` FOREIGN KEY (`fuzzyset_id`) REFERENCES `fuzzyset` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +203,7 @@ CREATE TABLE `statement` (
 
 LOCK TABLES `statement` WRITE;
 /*!40000 ALTER TABLE `statement` DISABLE KEYS */;
-INSERT INTO `statement` VALUES (1,NULL,1,NULL,1),(2,NULL,2,NULL,1),(3,NULL,1,NULL,2),(4,NULL,2,NULL,2),(5,NULL,1,NULL,3),(6,NULL,2,NULL,3),(7,NULL,1,NULL,4),(8,NULL,2,NULL,4),(9,1,3,NULL,5),(10,1,4,NULL,5),(11,1,5,NULL,5);
+INSERT INTO `statement` VALUES (1,NULL,1,NULL,1),(2,NULL,2,NULL,1),(3,NULL,1,NULL,2),(4,NULL,2,NULL,2),(5,NULL,1,NULL,3),(6,NULL,2,NULL,3),(7,NULL,1,NULL,4),(8,NULL,2,NULL,4),(9,NULL,1,NULL,5),(10,NULL,2,NULL,5),(11,NULL,1,NULL,6),(12,NULL,2,NULL,6),(13,1,3,NULL,7),(14,1,4,NULL,7);
 /*!40000 ALTER TABLE `statement` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,7 +231,7 @@ CREATE TABLE `termvar` (
 
 LOCK TABLES `termvar` WRITE;
 /*!40000 ALTER TABLE `termvar` DISABLE KEYS */;
-INSERT INTO `termvar` VALUES (1,1),(1,2),(1,3),(1,4),(2,1),(2,2),(2,3),(2,4),(3,5),(4,5),(5,5);
+INSERT INTO `termvar` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(3,7),(4,7);
 /*!40000 ALTER TABLE `termvar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -251,7 +248,7 @@ CREATE TABLE `variable` (
   `min` double NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,7 +257,7 @@ CREATE TABLE `variable` (
 
 LOCK TABLES `variable` WRITE;
 /*!40000 ALTER TABLE `variable` DISABLE KEYS */;
-INSERT INTO `variable` VALUES (1,255,0,'p1'),(2,255,0,'p2'),(3,255,0,'p3'),(4,255,0,'p4'),(5,255,0,'color');
+INSERT INTO `variable` VALUES (1,1,0,'d_p1p2'),(2,1,0,'d_p2p3'),(3,1,0,'d_p3p4'),(4,1,0,'d_p4p1'),(5,1,0,'d_p1p3'),(6,1,0,'d_p2p4'),(7,1,0,'mask');
 /*!40000 ALTER TABLE `variable` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -273,4 +270,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-04-14  1:29:10
+-- Dump completed on 2013-04-25 15:29:20
