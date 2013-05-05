@@ -64,6 +64,7 @@ public class ImageWindow extends JFrame {
 	private JProgressBar progressBar;
 	private JLabel status;
 	private JCheckBoxMenuItem chckbxmntmNoizeRemoving;
+	private JLabel resultMsg; 
 
 	/**
 	 * Create the frame.
@@ -79,11 +80,12 @@ public class ImageWindow extends JFrame {
 		colorEdgeDet.setProgressBar(progressBar);
 		colorEdgeDet.setImagePanel(rightImagePane);
 		colorEdgeDet.setLable(status);
+		colorEdgeDet.setMsgLable(resultMsg);
 	}
 	
 	private void initUI(){
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 700, 350);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -133,11 +135,12 @@ public class ImageWindow extends JFrame {
 		menuBar.add(mnAlgorithm);
 		
 		JRadioButtonMenuItem rdbtnmntmMonochrome = new JRadioButtonMenuItem("Monochrome");
-		rdbtnmntmMonochrome.setSelected(true);
+		rdbtnmntmMonochrome.setEnabled(false);
 		buttonGroup.add(rdbtnmntmMonochrome);
 		mnAlgorithm.add(rdbtnmntmMonochrome);
 		
 		final JRadioButtonMenuItem rdbtnmntmColor = new JRadioButtonMenuItem("Color");
+		rdbtnmntmColor.setSelected(true);
 		buttonGroup.add(rdbtnmntmColor);
 		mnAlgorithm.add(rdbtnmntmColor);
 		
@@ -185,6 +188,9 @@ public class ImageWindow extends JFrame {
 				}
 			}
 		});
+		
+		resultMsg = new JLabel("");
+		panel.add(resultMsg);
 		
 		status = new JLabel("");
 		panel.add(status);

@@ -59,6 +59,7 @@ public class ColorEdgeDetection extends AbstractEdgeDetection {
 				k++;
 				updateProgress(k);
 			}
+			updateView();
 		}
 		updateView();
 		long end = System.currentTimeMillis();

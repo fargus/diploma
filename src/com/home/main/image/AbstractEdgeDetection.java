@@ -23,6 +23,7 @@ public abstract class AbstractEdgeDetection implements Runnable {
 	protected JLabel status;
 	protected Variable v ;
 	protected boolean isRemoveNoize = true;
+	protected JLabel msg;
 
 	public void setImage(BufferedImage originImage) {
 		this.originImage = originImage;
@@ -30,6 +31,10 @@ public abstract class AbstractEdgeDetection implements Runnable {
 
 	public void setLable(JLabel status){
 		this.status=status;
+	}
+	
+	public void setMsgLable(JLabel msg){
+		this.msg=msg;
 	}
 
 	public BufferedImage getResult(){
@@ -41,6 +46,8 @@ public abstract class AbstractEdgeDetection implements Runnable {
 		progress.setMinimum(0);
 		progress.setMaximum((originImage.getWidth() - 1) * (originImage.getHeight() - 1));
 		panel.clearPixels();
+		updateMsg("");
+		updateStatus("");
 
 		resultImage = new BufferedImage(originImage.getWidth(), originImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		g = resultImage.createGraphics();
@@ -48,13 +55,21 @@ public abstract class AbstractEdgeDetection implements Runnable {
 		g.fillRect(0, 0, resultImage.getWidth(), resultImage.getHeight());
 		g.setColor(Color.white);
 
+		long start = System.currentTimeMillis();
 		detectEdges();
+		long stop = System.currentTimeMillis();
 
+		String resultMsg = "Main loop: "+(stop-start)+" ms. ";
+		
 		if (isRemoveNoize){
+			start = System.currentTimeMillis();
 			removeNoise();
+			stop = System.currentTimeMillis();
+			resultMsg = resultMsg + "Noise loop: "+(stop-start)+" ms.";
 		}
 
 		updateStatus("Done!");
+		updateMsg(resultMsg);
 		Thread.currentThread().interrupt();
 	}
 
@@ -123,6 +138,10 @@ public abstract class AbstractEdgeDetection implements Runnable {
 
 	public void updateStatus(String status){
 		this.status.setText(status);
+	}
+	
+	public void updateMsg(String msg){
+		this.msg.setText(msg);
 	}
 
 	protected void removeNoise(){
