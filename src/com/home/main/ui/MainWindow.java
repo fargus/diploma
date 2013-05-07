@@ -51,6 +51,8 @@ import com.home.main.rule.Condition;
 import com.home.main.rule.Rule;
 import com.home.main.rule.RuleBase;
 import com.home.main.variable.Variable;
+import javax.swing.event.MenuListener;
+import javax.swing.event.MenuEvent;
 
 public class MainWindow extends JFrame {
 
@@ -165,6 +167,8 @@ public class MainWindow extends JFrame {
 	private JButton btnDelete;
 	private JMenu mnTask;
 	private JMenuItem mntmEdgeDetection;
+	
+	private boolean isConnected = false;
 
 	public MainWindow() {
 		initUI();
@@ -225,6 +229,16 @@ public class MainWindow extends JFrame {
 			}
 		});
 		mnTask.add(mntmEdgeDetection);
+		
+		mnTask.addMenuListener(new MenuListener() {
+			public void menuCanceled(MenuEvent arg0) {
+			}
+			public void menuDeselected(MenuEvent arg0) {
+			}
+			public void menuSelected(MenuEvent arg0) {
+				mntmEdgeDetection.setEnabled(isConnected);
+			}
+		});
 	}
 
 	private void initControlPane() {
@@ -639,13 +653,18 @@ public class MainWindow extends JFrame {
 	}
 
 	private void connect() {
-		functions = rs.getAllFunc();
-		terms = rs.getAllFuzzySet();
-		variables = rs.getAllVariable();
-		conditions = rs.getAllCondition();
-		conclusions = rs.getAllConclusion();
-		rb = rs.getRuleBase();
-		updateView();
+		try{
+			functions = rs.getAllFunc();
+			terms = rs.getAllFuzzySet();
+			variables = rs.getAllVariable();
+			conditions = rs.getAllCondition();
+			conclusions = rs.getAllConclusion();
+			rb = rs.getRuleBase();
+			isConnected = true;
+			updateView();
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(this, "Unable to connect!", "Connection error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public void updateView() {

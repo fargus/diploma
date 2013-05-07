@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class ColorEdgeDetection extends AbstractEdgeDetection {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(ColorEdgeDetection.class);
 
 	public ColorEdgeDetection(Algorithm2 fuzzyLogic) {
@@ -59,7 +60,8 @@ public class ColorEdgeDetection extends AbstractEdgeDetection {
 				k++;
 				updateProgress(k);
 			}
-			updateView();
+			if (isLiveView)
+				updateView();
 		}
 		updateView();
 		long end = System.currentTimeMillis();

@@ -23,7 +23,9 @@ public abstract class AbstractEdgeDetection implements Runnable {
 	protected JLabel status;
 	protected Variable v ;
 	protected boolean isRemoveNoize = true;
+	protected boolean isLiveView = true;
 	protected JLabel msg;
+	protected JButton btn;
 
 	public void setImage(BufferedImage originImage) {
 		this.originImage = originImage;
@@ -48,6 +50,7 @@ public abstract class AbstractEdgeDetection implements Runnable {
 		panel.clearPixels();
 		updateMsg("");
 		updateStatus("");
+		btn.setEnabled(false);
 
 		resultImage = new BufferedImage(originImage.getWidth(), originImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		g = resultImage.createGraphics();
@@ -70,6 +73,7 @@ public abstract class AbstractEdgeDetection implements Runnable {
 
 		updateStatus("Done!");
 		updateMsg(resultMsg);
+		btn.setEnabled(true);
 		Thread.currentThread().interrupt();
 	}
 
@@ -222,8 +226,15 @@ public abstract class AbstractEdgeDetection implements Runnable {
 		}
 	}
 
-
 	public void isRemoveNoize(boolean selected) {
 		isRemoveNoize = selected;
+	}
+	
+	public void isLiveView(boolean selected){
+		isLiveView = selected;
+	}
+	
+	public void setButton(JButton btn){
+		this.btn = btn;
 	}
 }

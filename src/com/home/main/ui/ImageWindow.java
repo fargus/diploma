@@ -2,39 +2,41 @@ package com.home.main.ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JSplitPane;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSplitPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import com.home.main.algorithm.Algorithm;
 import com.home.main.algorithm.Algorithm2;
 import com.home.main.image.ColorEdgeDetection;
 import com.home.main.image.MonochromeEdgeDetection;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import javax.swing.JProgressBar;
-import javax.swing.JLabel;
-import javax.swing.JCheckBoxMenuItem;
-
 public class ImageWindow extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
@@ -64,7 +66,8 @@ public class ImageWindow extends JFrame {
 	private JProgressBar progressBar;
 	private JLabel status;
 	private JCheckBoxMenuItem chckbxmntmNoizeRemoving;
-	private JLabel resultMsg; 
+	private JLabel resultMsg;
+	private JButton btnNewButton;
 
 	/**
 	 * Create the frame.
@@ -81,6 +84,7 @@ public class ImageWindow extends JFrame {
 		colorEdgeDet.setImagePanel(rightImagePane);
 		colorEdgeDet.setLable(status);
 		colorEdgeDet.setMsgLable(resultMsg);
+		colorEdgeDet.setButton(btnNewButton);
 	}
 	
 	private void initUI(){
@@ -151,6 +155,26 @@ public class ImageWindow extends JFrame {
 		chckbxmntmNoizeRemoving.setSelected(true);
 		mnFiltering.add(chckbxmntmNoizeRemoving);
 		
+		JMenu mnView = new JMenu("View");
+		menuBar.add(mnView);
+		
+		final JCheckBoxMenuItem chckbxmntmStatistics = new JCheckBoxMenuItem("Statistics");
+		chckbxmntmStatistics.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				resultMsg.setVisible(chckbxmntmStatistics.isSelected());
+			}
+		});
+		mnView.add(chckbxmntmStatistics);
+		
+		final JCheckBoxMenuItem chckbxmntmLiveView = new JCheckBoxMenuItem("Live View");
+		chckbxmntmLiveView.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				colorEdgeDet.isLiveView(chckbxmntmLiveView.isSelected());
+			}
+		});
+		chckbxmntmLiveView.setSelected(true);
+		mnView.add(chckbxmntmLiveView);
+		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
@@ -172,7 +196,7 @@ public class ImageWindow extends JFrame {
 		flowLayout.setAlignment(FlowLayout.TRAILING);
 		contentPane.add(panel, BorderLayout.SOUTH);
 		
-		JButton btnNewButton = new JButton("Start");
+		btnNewButton = new JButton("Start");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (rdbtnmntmColor.isSelected()){
@@ -190,6 +214,7 @@ public class ImageWindow extends JFrame {
 		});
 		
 		resultMsg = new JLabel("");
+		resultMsg.setVisible(false);
 		panel.add(resultMsg);
 		
 		status = new JLabel("");
