@@ -28,12 +28,19 @@ public class ColorEdgeDetection extends AbstractEdgeDetection {
 		updateStatus("Detecting Edges...");
 		for (int i = 0; i < pixels.length - 1; i++) {
 			for (int j = 0; j < pixels[i].length - 1; j++) {
-				double p1p2 = Math.abs(positions[i][j]-positions[i][j+1]);
-				double p2p3 = Math.abs(positions[i][j+1]-positions[i+1][j+1]);
-				double p3p4 = Math.abs(positions[i+1][j+1]-positions[i+1][j]);
-				double p4p1 = Math.abs(positions[i+1][j]-positions[i][j]);
-				double p1p3 = Math.abs(positions[i][j]-positions[i+1][j+1]);
-				double p2p4 = Math.abs(positions[i][j+1]-positions[i+1][j]);
+//				double p1p2 = Math.abs(positions[i][j]-positions[i][j+1]);
+//				double p2p3 = Math.abs(positions[i][j+1]-positions[i+1][j+1]);
+//				double p3p4 = Math.abs(positions[i+1][j+1]-positions[i+1][j]);
+//				double p4p1 = Math.abs(positions[i+1][j]-positions[i][j]);
+//				double p1p3 = Math.abs(positions[i][j]-positions[i+1][j+1]);
+//				double p2p4 = Math.abs(positions[i][j+1]-positions[i+1][j]);
+				
+				double p1p2 = dist(pixels[i][j], pixels[i][j+1]);
+				double p2p3 = dist(pixels[i][j+1], pixels[i+1][j+1]);
+				double p3p4 = dist(pixels[i+1][j+1], pixels[i+1][j]);
+				double p4p1 = dist(pixels[i+1][j], pixels[i][j]);
+				double p1p3 = dist(pixels[i][j], pixels[i+1][j+1]);
+				double p2p4 = dist(pixels[i][j+1], pixels[i+1][j]);
 
 				double[] inputVals = new double[6];
 				inputVals[0] = p1p2;
@@ -52,6 +59,7 @@ public class ColorEdgeDetection extends AbstractEdgeDetection {
 						g.drawRect(j, i + 1, 0, 0);
 						g.drawRect(j + 1, i, 0, 0);
 						g.drawRect(j + 1, i + 1, 0, 0);
+						numOfBloks++;
 					}
 				}
 				//System.out.println("Distances\n");
@@ -84,5 +92,19 @@ public class ColorEdgeDetection extends AbstractEdgeDetection {
 		}
 
 		return positions;
+	}
+	
+	private double dist(int p1, int p2){
+		Color c1 = Color.decode(Integer.toString(p1));
+		int r1 = c1.getRed();
+		int g1 = c1.getGreen();
+		int b1 = c1.getBlue();
+		Color c2 = Color.decode(Integer.toString(p2));
+		int r2 = c2.getRed();
+		int g2 = c2.getGreen();
+		int b2 = c2.getBlue();
+		
+		double position = Math.sqrt(Math.pow(r1-r2,2)+Math.pow(b1-b2,2)+Math.pow(g1-g2,2))/441.6729559300637;
+		return position;
 	}
 }

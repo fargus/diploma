@@ -26,6 +26,7 @@ public abstract class AbstractEdgeDetection implements Runnable {
 	protected boolean isLiveView = true;
 	protected JLabel msg;
 	protected JButton btn;
+	protected int numOfBloks;
 
 	public void setImage(BufferedImage originImage) {
 		this.originImage = originImage;
@@ -45,6 +46,7 @@ public abstract class AbstractEdgeDetection implements Runnable {
 
 	@Override
 	public void run() {
+		numOfBloks = 0;
 		progress.setMinimum(0);
 		progress.setMaximum((originImage.getWidth() - 1) * (originImage.getHeight() - 1));
 		panel.clearPixels();
@@ -71,6 +73,7 @@ public abstract class AbstractEdgeDetection implements Runnable {
 			resultMsg = resultMsg + "Noise loop: "+(stop-start)+" ms.";
 		}
 
+		resultMsg = resultMsg + " Detected blocks: "+numOfBloks+"/"+((originImage.getHeight()-1)*(originImage.getWidth()-1));
 		updateStatus("Done!");
 		updateMsg(resultMsg);
 		btn.setEnabled(true);
