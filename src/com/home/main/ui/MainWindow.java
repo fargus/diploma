@@ -85,6 +85,7 @@ public class MainWindow extends JFrame {
 	public RuleBase rb;
 	private RuleSrvice rs = new RuleServiceImpl();
 	private Algorithm2 alg = new Algorithm2();
+	private Algorithm alg2 = new Algorithm();
 	private Map<Integer, Double> inputVal = new HashMap<Integer, Double>();
 	private Map<Integer, Double> result = new HashMap<Integer, Double>();
 
@@ -366,16 +367,16 @@ public class MainWindow extends JFrame {
 				horizontalBox.add(btnStart);
 				btnStart.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						alg.setRules(rb.getRules());
-						alg.setAccumType((AccumulationType) comboBox_2.getSelectedItem());
-						alg.setActType((ImplicationType) comboBox_3.getSelectedItem());
-						alg.setAggrType((AggregationType) comboBox_1.getSelectedItem());
-//						try {
-//							alg.run(inputVal);
-//						} catch (Exception e1) {
-//							e1.printStackTrace();
-//						}
-//						result = alg.getLastResult();
+						alg2.setRuleBase(rb);
+						alg2.setAccumType((AccumulationType) comboBox_2.getSelectedItem());
+						alg2.setActType((ImplicationType) comboBox_3.getSelectedItem());
+						alg2.setAggrType((AggregationType) comboBox_1.getSelectedItem());
+						try {
+							alg2.run(inputVal);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						result = alg2.getLastResult();
 						showResult();
 					}
 				});

@@ -88,6 +88,7 @@ public class ImageWindow extends JFrame {
 	}
 	
 	private void initUI(){
+		setTitle("Edge Detection");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 350);
 		

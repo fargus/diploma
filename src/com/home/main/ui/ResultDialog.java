@@ -57,6 +57,7 @@ public class ResultDialog extends JDialog {
 	 */
 	public ResultDialog(Set<Variable> outputVars, final Map<Integer, Double> result, JFrame parent) {
 		super(parent);
+		setTitle("Output values");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());

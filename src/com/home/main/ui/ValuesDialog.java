@@ -55,6 +55,7 @@ public class ValuesDialog extends JDialog {
 	 */
 	public ValuesDialog(Set<Variable> inputVars, final Map<Integer, Double> inputVal, JFrame parent) {
 		super(parent);
+		setTitle("Set input values");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -67,7 +68,7 @@ public class ValuesDialog extends JDialog {
 				temp.add(new JLabel("Variable:[ID=" + v.getId() + " Name=" + v.getName() + "]"));
 				temp.add(new JLabel("["+v.getMin()+"-"+v.getMax()+"]"));
 				JSpinner s = new JSpinner(new SpinnerNumberModel((inputVal != null && inputVal.get(v.getId()) != null) ? inputVal.get(v.getId()) : v.getMin(), v
-						.getMin(), v.getMax(), 1));
+						.getMin(), v.getMax(), 0.01));
 				spinnerMap.put(v.getId(), s);
 				temp.add(s);
 				contentPanel.add(temp);
